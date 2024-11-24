@@ -1,0 +1,23 @@
+{
+  "name": "application",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "format": "prettier . --write"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "generic-pool": "^3.9.0",
+    "morgan": "^1.10.0",
+    "node-firebird": "^1.1.9",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3"
+  }
+}
