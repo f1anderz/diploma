@@ -39,6 +39,9 @@
 .wrapper .main-form .methods .name-cell {
   width: 1100px;
 }
+.wrapper .main-form .methods .active {
+  background: #cacaca;
+}
 .wrapper .main-form .details {
   width: 300px;
   display: flex;
@@ -70,6 +73,62 @@
 .wrapper .main-form .details .order .order-date label .info {
   padding: 4px;
   border: 1px solid black;
+}
+.wrapper .info-form {
+  display: flex;
+}
+.wrapper .info-form aside {
+  z-index: 3;
+  margin-top: 50px;
+  width: 250px;
+}
+.wrapper .info-form aside .tab {
+  padding: 4px;
+  font-size: 14px;
+  border: 1px solid black;
+  border-bottom: none;
+  cursor: pointer;
+}
+.wrapper .info-form aside .tab.active {
+  border-right: 1px solid white;
+}
+.wrapper .info-form aside .tab:nth-child(even) {
+  background: #f0f0f0;
+}
+.wrapper .info-form aside .tab:hover {
+  background: #dbdbdb;
+}
+.wrapper .info-form aside .tab:last-child {
+  border-bottom: 1px solid black;
+}
+.wrapper .info-form .info-wrapper {
+  margin-left: -1px;
+  padding: 8px;
+  border: 1px solid black;
+}
+.wrapper .info-form .info-wrapper .container {
+  padding: 8px;
+}
+.wrapper .info-form .info-wrapper .container .hyg-stand-table td {
+  padding: 4px;
+}
+.wrapper .info-form .info-wrapper .container .hyg-stand-table .id-cell {
+  width: 50px;
+}
+.wrapper .info-form .info-wrapper .container .hyg-stand-table .target-cell {
+  width: 200px;
+}
+.wrapper .info-form .info-wrapper .container .hyg-stand-table .object-cell {
+  width: 300px;
+}
+.wrapper .info-form .info-wrapper .container .hyg-stand-table .mdr-cell {
+  width: 70px;
+}
+.wrapper .info-form .info-wrapper .container .hyg-stand-table .mdk-cell {
+  width: 50px;
+}
+.wrapper .info-form .info-wrapper .container .method-name {
+  padding: 8px;
 }
 
 /*# sourceMappingURL=index.css.map */

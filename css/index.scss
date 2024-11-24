@@ -36,7 +36,7 @@
             background: #f0f0f0;
           }
 
-          &:hover{
+          &:hover {
             background: #dbdbdb;
           }
         }
@@ -49,6 +49,10 @@
 
       .name-cell {
         width: 1100px;
+      }
+
+      .active {
+        background: #cacaca;
       }
     }
 
@@ -90,6 +94,80 @@
               border: 1px solid black;
             }
           }
+        }
+      }
+    }
+  }
+
+  .info-form {
+    display: flex;
+
+    aside {
+      z-index: 3;
+      margin-top: 50px;
+      width: 250px;
+
+      .tab {
+        padding: 4px;
+        font-size: 14px;
+        border: 1px solid black;
+        border-bottom: none;
+        cursor: pointer;
+
+        &.active {
+          border-right: 1px solid white;
+        }
+
+        &:nth-child(even) {
+          background: #f0f0f0;
+        }
+
+        &:hover {
+          background: #dbdbdb;
+        }
+
+        &:last-child {
+          border-bottom: 1px solid black;
+        }
+      }
+    }
+
+    .info-wrapper {
+      margin-left: -1px;
+      padding: 8px;
+      border: 1px solid black;
+
+      .container {
+        padding: 8px;
+
+        .hyg-stand-table {
+          td {
+            padding: 4px;
+          }
+
+          .id-cell {
+            width: 50px;
+          }
+
+          .target-cell {
+            width: 200px;
+          }
+
+          .object-cell {
+            width: 300px;
+          }
+
+          .mdr-cell {
+            width: 70px;
+          }
+
+          .mdk-cell {
+            width: 50px;
+          }
+        }
+
+        .method-name {
+          padding: 8px;
         }
       }
     }

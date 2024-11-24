@@ -1,17 +1,14 @@
 import {formatDate} from './utils/formatDate.js';
 
-getMethods()
+getMethods();
 
 let methods;
 
 async function getMethods() {
   try {
-    // const response = await fetch('http://localhost:3000/method');
-    // methods = await response.json();
-    methods = await templateMethods();
+    const response = await fetch('http://localhost:3000/method');
+    methods = await response.json();
 
-    fillTable();
-    fillTable();
     fillTable();
 
   } catch (error) {
@@ -21,7 +18,7 @@ async function getMethods() {
 
 function fillTable() {
   const methodsTable = document.querySelector('.methods tbody');
-  // methodsTable.innerHTML = '';
+  methodsTable.innerHTML = '';
   for (const method of methods) {
     const tr = document.createElement('tr');
 
@@ -42,11 +39,14 @@ function fillTable() {
   }
 }
 
+let selectedMethod = 1;
+
 function handleMethodSelect(method) {
   fillDetails(method);
 }
 
 function fillDetails(method) {
+  selectedMethod = method.ID;
   const approveInfo = document.querySelector('.details .approved label .info');
   approveInfo.innerHTML = '';
   approveInfo.value = method.APPROVAL;
@@ -56,96 +56,152 @@ function fillDetails(method) {
   const orderDate = document.querySelector('.details .order-date label .info');
   orderDate.innerHTML = '';
   orderDate.value = formatDate(new Date(method.ORDER_DT));
+  changeSelectedSubTab(2); // TODO change to 1
 }
 
-const tabs = {
-  1: {
-    1: "1 ФІЗИКО-ХІМІЧНІ ВЛАСТИВОСТІ",
-    2: "2 РЕКОМЕНДОВАНІ ГІГІЄНІЧНІ НОРМАТИВИ"
-  },
-  2: {
-    1: "1 ГАЛУЗЬ ВИКОРИСТАННЯ",
-    2: "2 НОРМИ ПОХИБКИ ВИМІРЮВАНЬ",
-    3: "3 ХАРАКТЕРИСТИКИ ПОХИБКИ ВИМІРЮВАНЬ І НОРМАТИВИ ОПЕРАТИВНОГО КОНТРОЛЮ",
-    4: "4 ЗАСОБИ ВИМІРЮВАЛЬНОЇ ТЕХНІКИ, ДОПОМІЖНЕ ОБЛАДНАННЯ, ПОСУД, РЕАКТИВИ ТА МАТЕРІАЛИ",
-    5: "5 МЕТОДИКА ВИМІРЮВАННЯ",
-    6: "6 ВИМОГИ БЕЗПЕКИ",
-    7: "7 ВИМОГИ ДО КВАЛІФІКАЦІЇ ОПЕРАТОРІВ",
-    8: "8 УМОВИ ПРОВЕДЕННЯ ВИМІРЮВАНЬ",
-    9: "9 ПІДГОТОВКА ДО ВИКОНАННЯ ВИМІРЮВАНЬ",
-    10: "10 ВИМІРЮВАННЯ",
-    11: "11 ОБРОБКА РЕЗУЛЬТАТІВ ВИМІРЮВАНЬ",
-    12: "12КОНТРОЛЬ ПОХИБКИ РЕЗУЛЬТАТІВ ВИМІРЮВАНЬ",
-    13: "13 ОФОРМЛЕННЯ РЕЗУЛЬТАТІВ ВИМІРЮВАНЬ",
-
-  }
+const tabOptions = {
+  1: [
+    {id: 1, label: "1 ФІЗИКО-ХІМІЧНІ ВЛАСТИВОСТІ", handler: renderPhysChemPropertiesTab},
+    {id: 2, label: "2 РЕКОМЕНДОВАНІ ГІГІЄНІЧНІ НОРМАТИВИ", handler: renderHygienicStandardsTab},
+  ],
+  2: [
+    {id: 1, label: "1 ГАЛУЗЬ ВИКОРИСТАННЯ"},
+    {id: 2, label: "2 НОРМИ ПОХИБКИ ВИМІРЮВАНЬ"},
+    {id: 3, label: "3 ХАРАКТЕРИСТИКИ ПОХИБКИ ВИМІРЮВАНЬ І НОРМАТИВИ ОПЕРАТИВНОГО КОНТРОЛЮ"},
+    {id: 4, label: "4 ЗАСОБИ ВИМІРЮВАЛЬНОЇ ТЕХНІКИ, ДОПОМІЖНЕ ОБЛАДНАННЯ, ПОСУД, РЕАКТИВИ ТА МАТЕРІАЛИ"},
+    {id: 5, label: "5 МЕТОДИКА ВИМІРЮВАННЯ"},
+    {id: 6, label: "6 ВИМОГИ БЕЗПЕКИ"},
+    {id: 7, label: "7 ВИМОГИ ДО КВАЛІФІКАЦІЇ ОПЕРАТОРІВ"},
+    {id: 8, label: "8 УМОВИ ПРОВЕДЕННЯ ВИМІРЮВАНЬ"},
+    {id: 9, label: "9 ПІДГОТОВКА ДО ВИКОНАННЯ ВИМІРЮВАНЬ"},
+    {id: 10, label: "10 ВИМІРЮВАННЯ"},
+    {id: 11, label: "11 ОБРОБКА РЕЗУЛЬТАТІВ ВИМІРЮВАНЬ"},
+    {id: 12, label: "12 КОНТРОЛЬ ПОХИБКИ РЕЗУЛЬТАТІВ ВИМІРЮВАНЬ"},
+    {id: 13, label: "13 ОФОРМЛЕННЯ РЕЗУЛЬТАТІВ ВИМІРЮВАНЬ"},
+  ]
 }
+
 let selectedTab = 1;
+let selectedSubTab = 1;
 const select = document.querySelector('#select_tabs');
+const tabs = document.querySelector('#tabs');
 select.addEventListener('change', changeSelectedTab);
+
+changeSelectedTab();
 
 function changeSelectedTab() {
   selectedTab = select.value;
-  console.log(selectedTab)
+  tabs.innerHTML = '';
+  const displayTabs = tabOptions[selectedTab];
+  for (const displayTab of displayTabs) {
+    const tab = document.createElement('div');
+    tab.textContent = displayTab.label;
+    tab.addEventListener('click', () => {
+      changeSelectedSubTab(displayTab.id)
+    });
+    tab.className = 'tab';
+    tabs.appendChild(tab);
+  }
 }
 
-async function templateMethods() {
-  return [
-    {
-      "ID": 1,
-      "MTHD_NUMBER": "№ 1282-214",
-      "NAME": "МЕТОДИЧНІ ВКАЗІВКИ З ВИЗНАЧЕННЯ СУЛЬФОКСАФЛОРУ В ЧЕРЕШНІ, ПЕРСИКАХ, ТОМАТАХ, ЧЕРЕШНЕВОМУ, ПЕРСИКОВОМУ ТА ТОМАТНОМУ СОКАХ МЕТОДОМ ВИСОКОЕФЕКТИВНОЇ РІДИННОЇ ХРОМАТОГРАФІЇ",
-      "APPROVAL": "Міністерство захисту довкілля та природних ресурсів України                                                                                                                            ",
-      "ORDER_NO": 42,
-      "ORDER_DT": "2024-10-11T21:00:00.000Z"
-    },
-    {
-      "ID": 2,
-      "MTHD_NUMBER": "№ 1283-215",
-      "NAME": "МЕТОДИЧНІ ВКАЗІВКИ З ВИЗНАЧЕННЯ ФЛУОКСАПІПРОЛІНУ У ВИНОГРАДІ, ТОМАТАХ, ВИНОГРАДНОМУ ТА ТОМАТНОМУ СОКАХ МЕТОДОМ ВИСОКОЕФЕКТИВНОЇ РІДИННОЇ ХРОМАТОГРАФІЇ",
-      "APPROVAL": "Міністерство захисту довкілля та природних ресурсів України                                                                                                                            ",
-      "ORDER_NO": 43,
-      "ORDER_DT": "2024-10-14T21:00:00.000Z"
-    },
-    {
-      "ID": 3,
-      "MTHD_NUMBER": "№ 1284-216",
-      "NAME": "МЕТОДИЧНІ ВКАЗІВКИ З ВИЗНАЧЕННЯ ДЕЛЬТАМЕТРИНУ В ВИНОГРАДІ ТА  ВИНОГРАДНОМУ СОЦІ МЕТОДОМ ГАЗОРІДИННОЇ ХРОМАТОГРАФІЇ",
-      "APPROVAL": "Міністерство захисту довкілля та природних ресурсів України                                                                                                                            ",
-      "ORDER_NO": 44,
-      "ORDER_DT": "2024-10-22T21:00:00.000Z"
-    },
-    {
-      "ID": 4,
-      "MTHD_NUMBER": "№ 1285-217",
-      "NAME": "МЕТОДИЧНІ ВКАЗІВКИ З ВИЗНАЧЕННЯ МЕТОБРОМУРОНУ В ЗЕРНІ СОЇ ТА СОЄВІЙ ОЛІЇМЕТОДОМ ГАЗОРІДИННОЇ ХРОМАТОГРАФІЇ",
-      "APPROVAL": "Міністерство захисту довкілля та природних ресурсів України                                                                                                                            ",
-      "ORDER_NO": 45,
-      "ORDER_DT": "2024-10-23T21:00:00.000Z"
-    },
-    {
-      "ID": 5,
-      "MTHD_NUMBER": "№ 1286-218",
-      "NAME": "МЕТОДИЧНІ ВКАЗІВКИ З ВИЗНАЧЕННЯ НАПРОПАМІДУ В ТОМАТАХ ТА ТОМАТНОМУ СОКУ МЕТОДОМ ГАЗОРІДИННОЇ ХРОМАТОГРАФІЇ",
-      "APPROVAL": "Міністерство захисту довкілля та природних ресурсів України                                                                                                                            ",
-      "ORDER_NO": 46,
-      "ORDER_DT": "2024-10-15T21:00:00.000Z"
-    },
-    {
-      "ID": 6,
-      "MTHD_NUMBER": "№ 1287-219",
-      "NAME": "МЕТОДИЧНІ ВКАЗІВКИ З ВИЗНАЧЕННЯ ТРИАДИМЕФОНУ І ТЕБУКОНАЗОЛУ В РІПАКОВІЙ ОЛІЇ МЕТОДОМ ГАЗОРІДИННОЇ ХРОМАТОГРАФІЇ",
-      "APPROVAL": "Міністерство захисту довкілля та природних ресурсів України                                                                                                                            ",
-      "ORDER_NO": 47,
-      "ORDER_DT": "2024-10-26T21:00:00.000Z"
-    },
-    {
-      "ID": 7,
-      "MTHD_NUMBER": "№ 1285-217",
-      "NAME": "МЕТОДИЧНІ ВКАЗІВКИ З ВИЗНАЧЕННЯ ФЛУТРІАФОЛУ В ЯБЛУКАХ ТА ЯБЛУЧНОМУ СОКУ МЕТОДОМ ГАЗОРІДИННОЇ ХРОМАТОГРАФІЇ",
-      "APPROVAL": "Міністерство захисту довкілля та природних ресурсів України                                                                                                                            ",
-      "ORDER_NO": 48,
-      "ORDER_DT": "2024-10-29T22:00:00.000Z"
-    }
-  ];
+
+async function changeSelectedSubTab(subTabId) {
+  const infoTab = document.querySelector('.info-wrapper');
+  selectedSubTab = subTabId;
+  infoTab.innerHTML = '';
+  const currentTab = tabOptions[selectedTab].find(subTab => subTab.id === selectedSubTab);
+
+  const header = document.createElement('div');
+  header.textContent = currentTab.label;
+  infoTab.appendChild(header);
+  infoTab.appendChild(await currentTab.handler());
+}
+
+changeSelectedSubTab(1);
+
+function renderPhysChemPropertiesTab() {
+  return document.createElement('div')
+}
+
+async function renderHygienicStandardsTab() {
+  const container = document.createElement('div');
+  container.className = 'container';
+
+  const propertiesTable = document.createElement('table');
+  propertiesTable.className = 'hyg-stand-table'
+
+  const tableHead = document.createElement('thead');
+  const idTh = document.createElement('th');
+  idTh.textContent = '#';
+  idTh.className = 'id-cell';
+
+  const targetTh = document.createElement('th');
+  targetTh.textContent = 'Цільова речовина';
+  targetTh.className = 'target-cell';
+
+  const objectTh = document.createElement('th');
+  objectTh.textContent = 'Об\'єкт аналізу';
+  objectTh.className = 'object-cell';
+
+  const mdrTh = document.createElement('th');
+  mdrTh.textContent = 'МДР';
+  mdrTh.className = 'mdr-cell';
+
+  const mdkTh = document.createElement('th');
+  mdkTh.textContent = 'МКВ';
+  mdkTh.className = 'mdk-cell';
+
+  tableHead.appendChild(idTh);
+  tableHead.appendChild(targetTh);
+  tableHead.appendChild(objectTh);
+  tableHead.appendChild(mdrTh);
+  tableHead.appendChild(mdkTh);
+
+  propertiesTable.appendChild(tableHead);
+
+  const tableBody = document.createElement('tbody');
+
+  const standards = await getHygienicStandards();
+  const currentMethod = standards[0].CHRM_DESCR;
+
+  for (const standard of standards) {
+    const tableRow = document.createElement('tr');
+    const idTd = document.createElement('td');
+    idTd.textContent = standard.ID;
+
+    const targetTd = document.createElement('td');
+    targetTd.textContent = standard.SUBSTANCE;
+
+    const objectTd = document.createElement('td');
+    objectTd.textContent = standard.OBJECT;
+
+    const mdrTd = document.createElement('td');
+    mdrTd.textContent = standard.MDR_VALUE;
+
+    const mdkTd = document.createElement('td');
+    mdkTd.textContent = standard.MDK_VALUE;
+
+    tableRow.appendChild(idTd);
+    tableRow.appendChild(targetTd);
+    tableRow.appendChild(objectTd);
+    tableRow.appendChild(mdrTd);
+    tableRow.appendChild(mdkTd);
+
+    tableBody.appendChild(tableRow);
+  }
+
+  propertiesTable.appendChild(tableBody);
+  container.appendChild(propertiesTable);
+
+  const methodField = document.createElement('div');
+  methodField.textContent = currentMethod;
+  methodField.className = 'method-name';
+  container.appendChild(methodField);
+
+  return container;
+}
+
+async function getHygienicStandards() {
+  const response = await fetch(`http://localhost:3000/method/${selectedMethod}/hygienic_standards`);
+  return await response.json();
 }
