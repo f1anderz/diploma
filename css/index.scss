@@ -1,0 +1,98 @@
+.wrapper {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .control {
+    select {
+      width: 500px;
+    }
+  }
+
+  .main-form {
+    display: flex;
+    gap: 32px;
+
+    .methods {
+      thead {
+        display: block;
+
+        tr {
+          display: flex;
+          gap: 300px;
+        }
+      }
+
+      tbody {
+        display: block;
+        max-height: 300px;
+        overflow-y: auto;
+
+        tr {
+          cursor: pointer;
+
+          &:nth-child(even) {
+            background: #f0f0f0;
+          }
+
+          &:hover{
+            background: #dbdbdb;
+          }
+        }
+      }
+
+      .id-cell {
+        min-width: 120px;
+        width: fit-content;
+      }
+
+      .name-cell {
+        width: 1100px;
+      }
+    }
+
+    .details {
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .approved {
+        label {
+          display: flex;
+          flex-direction: column;
+          padding: 4px;
+          font-weight: bold;
+        }
+
+        .info {
+          height: 100px;
+          padding: 4px;
+          border: 1px solid black;
+        }
+      }
+
+      .order {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        .order-number,
+        .order-date {
+          label {
+            display: flex;
+            justify-content: space-between;
+
+
+            .info {
+              padding: 4px;
+              border: 1px solid black;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

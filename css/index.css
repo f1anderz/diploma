@@ -1,0 +1,75 @@
+.wrapper {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.wrapper .control select {
+  width: 500px;
+}
+.wrapper .main-form {
+  display: flex;
+  gap: 32px;
+}
+.wrapper .main-form .methods thead {
+  display: block;
+}
+.wrapper .main-form .methods thead tr {
+  display: flex;
+  gap: 300px;
+}
+.wrapper .main-form .methods tbody {
+  display: block;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.wrapper .main-form .methods tbody tr {
+  cursor: pointer;
+}
+.wrapper .main-form .methods tbody tr:nth-child(even) {
+  background: #f0f0f0;
+}
+.wrapper .main-form .methods tbody tr:hover {
+  background: #dbdbdb;
+}
+.wrapper .main-form .methods .id-cell {
+  min-width: 120px;
+  width: fit-content;
+}
+.wrapper .main-form .methods .name-cell {
+  width: 1100px;
+}
+.wrapper .main-form .details {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.wrapper .main-form .details .approved label {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  font-weight: bold;
+}
+.wrapper .main-form .details .approved .info {
+  height: 100px;
+  padding: 4px;
+  border: 1px solid black;
+}
+.wrapper .main-form .details .order {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.wrapper .main-form .details .order .order-number label,
+.wrapper .main-form .details .order .order-date label {
+  display: flex;
+  justify-content: space-between;
+}
+.wrapper .main-form .details .order .order-number label .info,
+.wrapper .main-form .details .order .order-date label .info {
+  padding: 4px;
+  border: 1px solid black;
+}
+
+/*# sourceMappingURL=index.css.map */
