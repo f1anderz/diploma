@@ -80,7 +80,7 @@
 .wrapper .info-form aside {
   z-index: 3;
   margin-top: 50px;
-  width: 250px;
+  width: 350px;
 }
 .wrapper .info-form aside .tab {
   padding: 4px;
@@ -107,28 +107,46 @@
   border: 1px solid black;
 }
 .wrapper .info-form .info-wrapper .container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   padding: 8px;
 }
 .wrapper .info-form .info-wrapper .container .hyg-stand-table td {
   padding: 4px;
 }
 .wrapper .info-form .info-wrapper .container .hyg-stand-table .id-cell {
-  width: 50px;
+  width: 55px;
 }
 .wrapper .info-form .info-wrapper .container .hyg-stand-table .target-cell {
-  width: 200px;
+  width: 240px;
 }
 .wrapper .info-form .info-wrapper .container .hyg-stand-table .object-cell {
-  width: 300px;
+  width: 350px;
 }
 .wrapper .info-form .info-wrapper .container .hyg-stand-table .mdr-cell {
-  width: 70px;
+  width: 90px;
 }
 .wrapper .info-form .info-wrapper .container .hyg-stand-table .mdk-cell {
-  width: 50px;
+  width: 70px;
 }
 .wrapper .info-form .info-wrapper .container .method-name {
+  width: fit-content;
   padding: 8px;
+  border: 1px solid black;
+}
+.wrapper .control-buttons {
+  position: absolute;
+  bottom: 16px;
+  width: 80%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 32px;
+}
+.wrapper .control-buttons button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 18px;
 }
 
 /*# sourceMappingURL=index.css.map */
