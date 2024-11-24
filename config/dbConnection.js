@@ -1,53 +1,39 @@
 const Firebird = require("node-firebird");
-const genericPool = require("generic-pool");
 
 const options = require("./dbOptions");
 
-const poolOptions = {
-  max: 10,
-  min: 2,
-  idleTimeoutMillis: 30000,
-  acquireTimeoutMillis: 10000,
-};
-const pool = genericPool.createPool(
-  {
-    create() {
-      return new Promise((resolve, reject) => {
-        Firebird.attach(options, (err, db) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          resolve(db);
-        });
-      });
-    },
-    destroy(db) {
-      return new Promise((resolve) => {
-        db.detach();
-        resolve();
-      });
-    },
-  },
-  poolOptions,
-);
+let dbInstance = null;
+
+function getDatabaseInstance(callback) {
+  if (dbInstance) {
+    callback(null, dbInstance);
+    return;
+  }
+  Firebird.attach(options, (err, db) => {
+    if (err) {
+      callback(err);
+      return;
+    }
+    dbInstance = db;
+    callback(null, dbInstance);
+  });
+}
 
 module.exports = {
-  async query(sql, params = []) {
-    const db = await pool.acquire();
-    return new Promise((resolve, reject) => {
-      db.query(sql, params, (err, result) => {
-        pool.release(db);
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(result);
-      });
+  query(sql, params = [], callback) {
+    getDatabaseInstance((err, db) => {
+      if (err) {
+        callback(err);
+        return;
+      }
+      db.query(sql, params, callback);
     });
   },
-  async close() {
-    await pool.drain();
-    await pool.clear();
+
+  close() {
+    if (dbInstance) {
+      dbInstance.detach();
+      dbInstance = null;
+    }
   },
 };
