@@ -1,3 +1,5 @@
+import {renderHygienicStandardsTab} from './hygienic_standards.js';
+import {renderPhysChemPropertiesTab} from './phys_chem_prop.js'
 import {formatDate} from './utils/formatDate.js';
 
 getMethods();
@@ -10,7 +12,6 @@ async function getMethods() {
     methods = await response.json();
 
     fillTable();
-
   } catch (error) {
     console.error(error.message);
   }
@@ -32,7 +33,7 @@ function fillTable() {
     nameCell.className = 'name-cell';
     tr.appendChild(nameCell);
 
-    tr.addEventListener('click', () => handleMethodSelect(method));
+    tr.addEventListener('click', () => handleMethodSelect(method.ID));
 
     methodsTable.appendChild(tr);
 
@@ -56,7 +57,7 @@ function fillDetails(method) {
   const orderDate = document.querySelector('.details .order-date label .info');
   orderDate.innerHTML = '';
   orderDate.value = formatDate(new Date(method.ORDER_DT));
-  changeSelectedSubTab(2); // TODO change to 1
+  changeSelectedSubTab(1);
 }
 
 const tabOptions = {
@@ -86,8 +87,8 @@ let selectedSubTab = 1;
 const select = document.querySelector('#select_tabs');
 const tabs = document.querySelector('#tabs');
 select.addEventListener('change', changeSelectedTab);
-
 changeSelectedTab();
+changeSelectedSubTab(1);
 
 function changeSelectedTab() {
   selectedTab = select.value;
@@ -96,8 +97,8 @@ function changeSelectedTab() {
   for (const displayTab of displayTabs) {
     const tab = document.createElement('div');
     tab.textContent = displayTab.label;
-    tab.addEventListener('click', () => {
-      changeSelectedSubTab(displayTab.id)
+    tab.addEventListener('click', async () => {
+      await changeSelectedSubTab(displayTab.id)
     });
     tab.className = 'tab';
     tabs.appendChild(tab);
@@ -114,94 +115,12 @@ async function changeSelectedSubTab(subTabId) {
   const header = document.createElement('div');
   header.textContent = currentTab.label;
   infoTab.appendChild(header);
-  infoTab.appendChild(await currentTab.handler());
-}
 
-changeSelectedSubTab(1);
-
-function renderPhysChemPropertiesTab() {
-  return document.createElement('div')
-}
-
-async function renderHygienicStandardsTab() {
-  const container = document.createElement('div');
-  container.className = 'container';
-
-  const propertiesTable = document.createElement('table');
-  propertiesTable.className = 'hyg-stand-table'
-
-  const tableHead = document.createElement('thead');
-  const idTh = document.createElement('th');
-  idTh.textContent = '#';
-  idTh.className = 'id-cell';
-
-  const targetTh = document.createElement('th');
-  targetTh.textContent = 'Цільова речовина';
-  targetTh.className = 'target-cell';
-
-  const objectTh = document.createElement('th');
-  objectTh.textContent = 'Об\'єкт аналізу';
-  objectTh.className = 'object-cell';
-
-  const mdrTh = document.createElement('th');
-  mdrTh.textContent = 'МДР';
-  mdrTh.className = 'mdr-cell';
-
-  const mdkTh = document.createElement('th');
-  mdkTh.textContent = 'МКВ';
-  mdkTh.className = 'mdk-cell';
-
-  tableHead.appendChild(idTh);
-  tableHead.appendChild(targetTh);
-  tableHead.appendChild(objectTh);
-  tableHead.appendChild(mdrTh);
-  tableHead.appendChild(mdkTh);
-
-  propertiesTable.appendChild(tableHead);
-
-  const tableBody = document.createElement('tbody');
-
-  const standards = await getHygienicStandards();
-  const currentMethod = standards[0].CHRM_DESCR;
-
-  for (const standard of standards) {
-    const tableRow = document.createElement('tr');
-    const idTd = document.createElement('td');
-    idTd.textContent = standard.ID;
-
-    const targetTd = document.createElement('td');
-    targetTd.textContent = standard.SUBSTANCE;
-
-    const objectTd = document.createElement('td');
-    objectTd.textContent = standard.OBJECT;
-
-    const mdrTd = document.createElement('td');
-    mdrTd.textContent = standard.MDR_VALUE;
-
-    const mdkTd = document.createElement('td');
-    mdkTd.textContent = standard.MDK_VALUE;
-
-    tableRow.appendChild(idTd);
-    tableRow.appendChild(targetTd);
-    tableRow.appendChild(objectTd);
-    tableRow.appendChild(mdrTd);
-    tableRow.appendChild(mdkTd);
-
-    tableBody.appendChild(tableRow);
+  let getParam = 0;
+  if (currentTab.id === 1) {
+    getParam = 1;
+  } else if (currentTab.id === 2) {
+    getParam = selectedMethod
   }
-
-  propertiesTable.appendChild(tableBody);
-  container.appendChild(propertiesTable);
-
-  const methodField = document.createElement('div');
-  methodField.textContent = currentMethod;
-  methodField.className = 'method-name';
-  container.appendChild(methodField);
-
-  return container;
-}
-
-async function getHygienicStandards() {
-  const response = await fetch(`http://localhost:3000/method/${selectedMethod}/hygienic_standards`);
-  return await response.json();
+  infoTab.appendChild(await currentTab.handler(getParam));
 }

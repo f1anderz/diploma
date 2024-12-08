@@ -77,28 +77,28 @@
 .wrapper .info-form {
   display: flex;
 }
-.wrapper .info-form aside {
+.wrapper .info-form #tabs {
   z-index: 3;
   margin-top: 50px;
   width: 350px;
 }
-.wrapper .info-form aside .tab {
+.wrapper .info-form #tabs .tab {
   padding: 4px;
   font-size: 14px;
   border: 1px solid black;
   border-bottom: none;
   cursor: pointer;
 }
-.wrapper .info-form aside .tab.active {
+.wrapper .info-form #tabs .tab.active {
   border-right: 1px solid white;
 }
-.wrapper .info-form aside .tab:nth-child(even) {
+.wrapper .info-form #tabs .tab:nth-child(even) {
   background: #f0f0f0;
 }
-.wrapper .info-form aside .tab:hover {
+.wrapper .info-form #tabs .tab:hover {
   background: #dbdbdb;
 }
-.wrapper .info-form aside .tab:last-child {
+.wrapper .info-form #tabs .tab:last-child {
   border-bottom: 1px solid black;
 }
 .wrapper .info-form .info-wrapper {
