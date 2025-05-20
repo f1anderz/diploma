@@ -1,0 +1,30 @@
+{
+  "name": "cpmi_client_old",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier . --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/f1anderz/diploma.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/f1anderz/diploma/issues"
+  },
+  "homepage": "https://github.com/f1anderz/diploma#readme",
+  "description": "",
+  "dependencies": {
+    "promise-polyfill": "8.3.0",
+    "whatwg-fetch": "^3.6.20"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "prettier": "^3.5.3"
+  }
+}

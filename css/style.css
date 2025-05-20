@@ -5,28 +5,288 @@
 }
 
 body {
+  font-family: Arial, sans-serif;
   width: 80%;
   margin: 0 auto;
+  background-color: #f4f4f4;
+  padding: 10px 0;
 }
 
-table {
+.wrapper {
+  padding: 12px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.control {
+  margin-bottom: 15px;
+}
+.control label {
+  margin-right: 5px;
+}
+.control select {
+  width: 500px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.main-form {
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.methods-table-wrapper {
+  float: left;
+  width: 68%;
+  margin-right: 2%;
+  height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+table.methods {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.details {
+  float: left;
+  width: 30%;
+  padding-left: 10px;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+th {
+  background-color: #e9e9e9;
+  font-weight: bold;
+}
+
+tr {
+  cursor: pointer;
+}
+tr:hover {
+  background-color: #f0f0f0;
+}
+tr.active {
+  background: #d0e4f2;
+  font-weight: bold;
+}
+
+.id-cell {
+  width: 100px;
+}
+
+.approved label,
+.order-number label,
+.order-date label {
+  display: block;
+  font-weight: bold;
+  padding: 4px 0;
+  margin-bottom: 3px;
+}
+
+.info,
+#order-number-info,
+#order-date-info {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+textarea.info {
+  height: 80px;
+  resize: vertical;
+}
+
+.info-form {
+  overflow: hidden;
+  margin-top: 30px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+#tabs {
+  float: left;
+  width: 200px;
+  margin-right: 15px;
+}
+
+.tab {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  cursor: pointer;
+  margin-bottom: -1px;
+  background: #f9f9f9;
+  border-radius: 4px 4px 0 0;
+}
+.tab:last-child {
+  border-bottom: 1px solid #ccc;
+}
+.tab.active {
+  background: #fff;
+  border-bottom-color: #fff;
+  font-weight: bold;
+}
+
+.info-wrapper {
+  float: left;
+  width: calc(100% - 215px);
+  padding: 15px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  min-height: 200px;
+  border-radius: 0 4px 4px 4px;
+}
+
+.container {
+  padding: 8px;
+}
+
+.hyg-stand-table {
+  width: 100%;
   border-collapse: collapse;
 }
-table tbody {
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
+.hyg-stand-table td,
+.hyg-stand-table th {
+  padding: 6px;
+  border: 1px solid #ddd;
 }
-table tbody tr:first-child td {
-  border-top: none;
+.hyg-stand-table .id-cell {
+  width: 55px;
 }
-table tbody tr:last-child td {
-  border-bottom: none;
+.hyg-stand-table .target-cell {
+  width: 240px;
 }
-table td {
-  border: 1px solid black;
+.hyg-stand-table .object-cell {
+  width: 350px;
 }
-table th, table td {
-  padding: 4px;
+.hyg-stand-table .mdr-cell {
+  width: 90px;
+}
+.hyg-stand-table .mdk-cell {
+  width: 70px;
 }
 
-/*# sourceMappingURL=style.css.map */
+.method-name {
+  padding: 10px;
+  border: 1px solid #ddd;
+  background-color: #f0f0f0;
+  display: inline-block;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+
+.phys-chem-select {
+  width: 250px;
+  margin-right: 4px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.substance-info{
+  padding-top: 16px;
+  display: inline-block;
+  margin-left: auto;
+}
+
+.cas-label {
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+.cas-input {
+  width: 100px;
+  margin-right: 4px;
+  padding: 2px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#brutto {
+  margin-top: 4px;
+}
+
+.control-buttons {
+  margin-top: 25px;
+  text-align: right;
+  width: 100%;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+  clear: both;
+}
+
+.control-buttons button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin-left: 10px;
+  border: 1px solid #ccc;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.control-buttons button:hover {
+  background-color: #0056b3;
+}
+.control-buttons button:first-child {
+  background-color: #6c757d;
+}
+.control-buttons button:first-child:hover {
+  background-color: #545b62;
+}
+
+#customAlertModal {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 10000;
+  padding-top: 100px;
+}
+#customAlertModal .modal-content {
+  position: relative;
+  margin: auto;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 450px;
+  text-align: center;
+  border-radius: 5px;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+#customAlertModal #customAlertMessage {
+  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+#customAlertModal #customAlertOkButton {
+  padding: 10px 25px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+#customAlertModal #customAlertOkButton:hover {
+  background-color: #0056b3;
+}

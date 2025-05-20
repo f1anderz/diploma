@@ -1,7 +1,7 @@
+'use strict';
+
 if (!window.JSON || !window.JSON.parse || !window.JSON.stringify) {
-  document.write(
-    '<script src="https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.3/json3.min.js"><\/script>'
-  );
+  document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.3/json3.min.js"><\/script>');
 }
 
 /**
@@ -168,13 +168,7 @@ function renderHygienicStandardsTab(selectedMethodId, displayCallback) {
       var standard = standards[j];
       var row = document.createElement('tr');
 
-      var values = [
-        standard.ID || '',
-        standard.SUBSTANCE || '',
-        standard.OBJECT || '',
-        standard.MDR_VALUE || '',
-        standard.MDK_VALUE || '',
-      ];
+      var values = [standard.ID || '', standard.SUBSTANCE || '', standard.OBJECT || '', standard.MDR_VALUE || '', standard.MDK_VALUE || ''];
       for (var k = 0; k < values.length; k++) {
         var td = document.createElement('td');
         setText(td, values[k]);
@@ -246,55 +240,52 @@ function renderPhysChemPropertiesTab(methodId, displayCallback) {
           }
         }
 
-        getJSON(
-          'http://34.227.205.75:3000/substance/' + select.value + '/preparates',
-          function (err, preparateData) {
-            if (err) {
-              showCustomAlert('Error loading physical/chemical properties: ' + err.message);
-              setText(container, 'Could not load data.');
-            } else {
-              var preparateSelect = document.createElement('select');
-              preparateSelect.name = 'preparate';
-              preparateSelect.className = 'phys-chem-select';
-              preparateSelect.appendChild(emptyOption);
+        getJSON('http://34.227.205.75:3000/substance/' + select.value + '/preparates', function (err, preparateData) {
+          if (err) {
+            showCustomAlert('Error loading physical/chemical properties: ' + err.message);
+            setText(container, 'Could not load data.');
+          } else {
+            var preparateSelect = document.createElement('select');
+            preparateSelect.name = 'preparate';
+            preparateSelect.className = 'phys-chem-select';
+            preparateSelect.appendChild(emptyOption);
 
-              for (var i = 0; i < preparateData.length; i++) {
-                var preparateOption = document.createElement('option');
-                preparateOption.value = preparateData[i].PREPARATE_ID;
-                setText(preparateOption, preparateData[i].PREPARATE);
-                preparateSelect.appendChild(preparateOption);
-              }
+            for (var i = 0; i < preparateData.length; i++) {
+              var preparateOption = document.createElement('option');
+              preparateOption.value = preparateData[i].PREPARATE_ID;
+              setText(preparateOption, preparateData[i].PREPARATE);
+              preparateSelect.appendChild(preparateOption);
             }
-            container.appendChild(preparateSelect);
-
-            var substanceInfoBlock = document.createElement('div');
-            substanceInfoBlock.className = 'substance-info';
-
-            var casLabel = document.createElement('label');
-            setText(casLabel, 'CAS #');
-            casLabel.className = 'cas-label';
-            casLabel.htmlFor = 'cas-input';
-            var casInput = document.createElement('input');
-            casInput.className = 'cas-input';
-            casInput.id = 'cas-input';
-            casInput.value = selectedSubstance.CAS;
-            var bruttoFormula = document.createElement('input');
-            bruttoFormula.value = selectedSubstance.BRUTTO;
-            bruttoFormula.id = 'brutto';
-
-            var molMass = document.createElement('input');
-            molMass.value = selectedSubstance.MOL_MASS;
-            molMass.id = 'mol-mass';
-
-            substanceInfoBlock.appendChild(casLabel);
-            substanceInfoBlock.appendChild(casInput);
-            substanceInfoBlock.appendChild(document.createElement('br'));
-            substanceInfoBlock.appendChild(bruttoFormula);
-            substanceInfoBlock.appendChild(molMass);
-
-            container.appendChild(substanceInfoBlock);
           }
-        );
+          container.appendChild(preparateSelect);
+
+          var substanceInfoBlock = document.createElement('div');
+          substanceInfoBlock.className = 'substance-info';
+
+          var casLabel = document.createElement('label');
+          setText(casLabel, 'CAS #');
+          casLabel.className = 'cas-label';
+          casLabel.htmlFor = 'cas-input';
+          var casInput = document.createElement('input');
+          casInput.className = 'cas-input';
+          casInput.id = 'cas-input';
+          casInput.value = selectedSubstance.CAS;
+          var bruttoFormula = document.createElement('input');
+          bruttoFormula.value = selectedSubstance.BRUTTO;
+          bruttoFormula.id = 'brutto';
+
+          var molMass = document.createElement('input');
+          molMass.value = selectedSubstance.MOL_MASS;
+          molMass.id = 'mol-mass';
+
+          substanceInfoBlock.appendChild(casLabel);
+          substanceInfoBlock.appendChild(casInput);
+          substanceInfoBlock.appendChild(document.createElement('br'));
+          substanceInfoBlock.appendChild(bruttoFormula);
+          substanceInfoBlock.appendChild(molMass);
+
+          container.appendChild(substanceInfoBlock);
+        });
       });
     }
     if (displayCallback) displayCallback(container);
@@ -316,28 +307,25 @@ function setupInfoTabs(method) {
   tabsContainer.innerHTML = '';
   infoWrapper.innerHTML = '';
 
-  var tabsData = [
-    {
-      name: 'ФІЗИКО-ХІМІЧНІ ВЛАСТИВОСТІ',
-      id: 'physChem',
-      renderer: function () {
-        renderPhysChemPropertiesTab(method.ID, function (contentElement) {
-          infoWrapper.innerHTML = '';
-          infoWrapper.appendChild(contentElement);
-        });
-      },
-    },
-    {
-      name: 'РЕКОМ. ГІГІЄНІЧНІ НОРМАТИВИ',
-      id: 'hygStandards',
-      renderer: function () {
-        renderHygienicStandardsTab(method.ID, function (contentElement) {
-          infoWrapper.innerHTML = '';
-          infoWrapper.appendChild(contentElement);
-        });
-      },
-    },
-  ];
+  var tabsData = [{
+    name: 'ФІЗИКО-ХІМІЧНІ ВЛАСТИВОСТІ',
+    id: 'physChem',
+    renderer: function renderer() {
+      renderPhysChemPropertiesTab(method.ID, function (contentElement) {
+        infoWrapper.innerHTML = '';
+        infoWrapper.appendChild(contentElement);
+      });
+    }
+  }, {
+    name: 'РЕКОМ. ГІГІЄНІЧНІ НОРМАТИВИ',
+    id: 'hygStandards',
+    renderer: function renderer() {
+      renderHygienicStandardsTab(method.ID, function (contentElement) {
+        infoWrapper.innerHTML = '';
+        infoWrapper.appendChild(contentElement);
+      });
+    }
+  }];
 
   for (var i = 0; i < tabsData.length; i++) {
     (function (tabInfo) {
