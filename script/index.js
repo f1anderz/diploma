@@ -4,6 +4,8 @@ if (!window.JSON || !window.JSON.parse || !window.JSON.stringify) {
   );
 }
 
+var apiURL = 'http://34.227.205.75:3000/';
+
 /**
  * Shows a custom modal alert.
  * @param {string} message - The message to display.
@@ -126,7 +128,7 @@ function renderHygienicStandardsTab(selectedMethodId, displayCallback) {
 
   setText(container, 'Loading hygienic standards...');
 
-  var apiUrl = 'http://34.227.205.75:3000/method/' + selectedMethodId + '/hygienic_standards';
+  var apiUrl = apiURL + 'method/' + selectedMethodId + '/hygienic_standards';
 
   getJSON(apiUrl, function (err, standards) {
     setText(container, '');
@@ -211,7 +213,7 @@ function renderPhysChemPropertiesTab(methodId, displayCallback) {
   container.className = 'container';
   setText(container, 'Loading physical and chemical properties...');
 
-  getJSON('http://34.227.205.75:3000/substance/' + methodId, function (err, data) {
+  getJSON(apiURL + 'substance/' + methodId, function (err, data) {
     setText(container, '');
     if (err) {
       showCustomAlert('Error loading physical/chemical properties: ' + err.message);
@@ -247,7 +249,7 @@ function renderPhysChemPropertiesTab(methodId, displayCallback) {
         }
 
         getJSON(
-          'http://34.227.205.75:3000/substance/' + select.value + '/preparates',
+          apiURL + 'substance/' + select.value + '/preparates',
           function (err, preparateData) {
             if (err) {
               showCustomAlert('Error loading physical/chemical properties: ' + err.message);
@@ -293,6 +295,231 @@ function renderPhysChemPropertiesTab(methodId, displayCallback) {
             substanceInfoBlock.appendChild(molMass);
 
             container.appendChild(substanceInfoBlock);
+
+            getJSON(
+              apiURL + 'substance/' + select.value + '/synonyms',
+              function (err, synonymsData) {
+                if (err) {
+                  showCustomAlert('Error loading physical/chemical properties: ' + err.message);
+                  setText(container, 'Could not load data.');
+                } else {
+                  var synonyms = synonymsData;
+
+                  var tableWrapper = document.createElement('div');
+                  tableWrapper.className = 'synonyms-table-wrapper';
+                  var synonymsTable = document.createElement('table');
+                  synonymsTable.className = 'synonyms-table';
+
+                  var tableHead = document.createElement('thead');
+                  var headerRow = document.createElement('tr');
+                  var headerTitles = ['#', 'Синонім УКР', 'Синонім АНГЛ'];
+                  var headerClasses = ['id-cell', 'ukr-name-cell', 'eng-name-cell'];
+
+                  for (var i = 0; i < headerTitles.length; i++) {
+                    var th = document.createElement('th');
+                    setText(th, headerTitles[i]);
+                    if (headerClasses[i]) th.className = headerClasses[i];
+                    headerRow.appendChild(th);
+                  }
+                  tableHead.appendChild(headerRow);
+                  synonymsTable.appendChild(tableHead);
+
+                  var tableBody = document.createElement('tbody');
+
+                  for (var j = 0; j < synonyms.length; j++) {
+                    var row = document.createElement('tr');
+                    var idCell = document.createElement('td');
+                    var uSynonym = document.createElement('td');
+                    var enSynonym = document.createElement('td');
+
+                    setText(idCell, j + 1);
+                    idCell.className = 'id-cell';
+                    setText(uSynonym, synonyms[j].U_NAME);
+                    setText(enSynonym, synonyms[j].E_NAME);
+
+                    row.appendChild(idCell);
+                    row.appendChild(uSynonym);
+                    row.appendChild(enSynonym);
+                    tableBody.appendChild(row);
+                  }
+
+                  synonymsTable.appendChild(tableBody);
+                  tableWrapper.appendChild(synonymsTable);
+                  container.appendChild(tableWrapper);
+                }
+
+                var imageContainer = document.createElement('div');
+                imageContainer.className = 'image';
+                var image = document.createElement('img');
+                image.src = '/assets/deltamethrin.jpg';
+                imageContainer.appendChild(image);
+                container.appendChild(imageContainer);
+
+                var agrStateInput = document.createElement('input');
+                agrStateInput.className = 'agr-state-input';
+                agrStateInput.value = selectedSubstance.AGR_STATE;
+                container.appendChild(agrStateInput);
+
+                getJSON(
+                  apiURL + 'substance/' + select.value + '/solubility',
+                  function (err, solubilityData) {
+                    if (err) {
+                      showCustomAlert('Error loading physical/chemical properties: ' + err.message);
+                      setText(container, 'Could not load data.');
+                    } else {
+                      var solubilityTableWrap = document.createElement('div');
+                      solubilityTableWrap.className = 'solubility-table-wrap';
+                      var solubilityTable = document.createElement('table');
+                      solubilityTable.className = 'solubility-table';
+
+                      var tableHead = document.createElement('thead');
+                      var headerRow = document.createElement('tr');
+                      var headerTitles = ['#', ' Розчинник', 'Розчинність', 'T \u00B0C', 'pH'];
+                      var headerClasses = [
+                        'id-cell',
+                        'solvent-cell',
+                        'solubility-cell',
+                        'temp-cell',
+                        'ph-cell',
+                      ];
+
+                      for (var i = 0; i < headerTitles.length; i++) {
+                        var th = document.createElement('th');
+                        setText(th, headerTitles[i]);
+                        if (headerClasses[i]) th.className = headerClasses[i];
+                        headerRow.appendChild(th);
+                      }
+                      tableHead.appendChild(headerRow);
+                      solubilityTable.appendChild(tableHead);
+
+                      var tableBody = document.createElement('tbody');
+
+                      for (var i = 0; i < solubilityData.length; i++) {
+                        var row = document.createElement('tr');
+                        var idCell = document.createElement('td');
+                        var nameCell = document.createElement('td');
+                        nameCell.className = 'solubility-name-cell';
+                        var solubilityValue = document.createElement('td');
+                        solubilityValue.className = 'solubility-cell';
+                        var temp = document.createElement('td');
+                        temp.className = 'temp-cell';
+                        var ph = document.createElement('td');
+                        ph.className = 'ph-cell';
+
+                        setText(idCell, i + 1);
+                        setText(nameCell, solubilityData[i].SOLVENT);
+                        setText(solubilityValue, solubilityData[i].SOLUBILITY);
+                        setText(temp, solubilityData[i].TEMPERATURE);
+                        setText(ph, solubilityData[i].PH);
+
+                        row.appendChild(idCell);
+                        row.appendChild(nameCell);
+                        row.appendChild(solubilityValue);
+                        row.appendChild(temp);
+                        row.appendChild(ph);
+
+                        tableBody.appendChild(row);
+                      }
+
+                      solubilityTable.appendChild(tableBody);
+                      solubilityTableWrap.appendChild(solubilityTable);
+                      container.appendChild(solubilityTableWrap);
+
+                      getJSON(
+                        apiURL + 'substance/' + select.value + '/vapor_pressure',
+                        function (err, pressureData) {
+                          if (err) {
+                            showCustomAlert(
+                              'Error loading physical/chemical properties: ' + err.message
+                            );
+                            setText(container, 'Could not load data.');
+                          } else {
+                            var pressureTableWrap = document.createElement('div');
+                            pressureTableWrap.className = 'pressure-table-wrap';
+                            var pressureTable = document.createElement('table');
+                            pressureTable.className = 'pressure-table';
+
+                            var tableHead = document.createElement('thead');
+                            var headerRow = document.createElement('tr');
+                            var headerTitles = ['#', 'Тиск', 'T \u00B0C'];
+                            var headerClasses = ['id-cell', 'pressure-cell', 'temp-cell'];
+
+                            for (var i = 0; i < headerTitles.length; i++) {
+                              var th = document.createElement('th');
+                              setText(th, headerTitles[i]);
+                              if (headerClasses[i]) th.className = headerClasses[i];
+                              headerRow.appendChild(th);
+                            }
+                            tableHead.appendChild(headerRow);
+                            pressureTable.appendChild(tableHead);
+
+                            var tableBody = document.createElement('tbody');
+
+                            for (var i = 0; i < pressureData.length; i++) {
+                              var row = document.createElement('tr');
+                              var idCell = document.createElement('td');
+                              var pressureCell = document.createElement('td');
+                              var temperatureCell = document.createElement('td');
+
+                              setText(idCell, i + 1);
+                              setText(pressureCell, pressureData[i].PRESSURE);
+                              setText(temperatureCell, pressureData[i].TEMPERATURE);
+
+                              row.appendChild(idCell);
+                              row.appendChild(pressureCell);
+                              row.appendChild(temperatureCell);
+
+                              tableBody.appendChild(row);
+                            }
+
+                            pressureTable.appendChild(tableBody);
+                            pressureTableWrap.appendChild(pressureTable);
+                            container.appendChild(pressureTableWrap);
+                          }
+
+                          var info = document.createElement('div');
+                          info.className = 'substance-info';
+
+                          var tempLabel = document.createElement('label');
+                          var tempInput = document.createElement('input');
+                          var rozkladLabel = document.createElement('label');
+                          var rozkladInput = document.createElement('input');
+                          var logpLabel = document.createElement('label');
+                          var logpInput = document.createElement('input');
+
+                          setText(tempLabel, 'T плавлення');
+                          tempLabel.className = 'info-label';
+                          tempInput.value = selectedSubstance.MELTING_T;
+                          tempInput.type = 'text';
+                          tempInput.className = 'info-input';
+                          setText(rozkladLabel, 'T розкладу');
+                          rozkladLabel.className = 'info-label';
+                          rozkladInput.value = selectedSubstance.DECOMPOSIT_T;
+                          rozkladInput.type = 'text';
+                          rozkladInput.className = 'info-input';
+                          setText(logpLabel, 'log P');
+                          logpLabel.className = 'info-label';
+                          logpInput.value = selectedSubstance.LOG_P;
+                          logpInput.type = 'text';
+                          logpInput.className = 'info-input';
+
+                          info.appendChild(tempLabel);
+                          info.appendChild(tempInput);
+                          info.appendChild(document.createElement('br'));
+                          info.appendChild(rozkladLabel);
+                          info.appendChild(rozkladInput);
+                          info.appendChild(document.createElement('br'));
+                          info.appendChild(logpLabel);
+                          info.appendChild(logpInput);
+                          info.appendChild(document.createElement('br'));
+                          container.appendChild(info);
+                        }
+                      );
+                    }
+                  }
+                );
+              }
+            );
           }
         );
       });
@@ -375,7 +602,7 @@ function setupInfoTabs(method) {
  * @param {function} callback - Callback function (err, methods).
  */
 function getMethods(callback) {
-  getJSON('http://34.227.205.75:3000/method', callback);
+  getJSON(apiURL + 'method', callback);
 }
 
 /**
