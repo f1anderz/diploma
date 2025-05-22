@@ -118,6 +118,210 @@ function setText(el, text) {
 }
 
 /**
+ * Attaches an event listener compatibly for IE8 and modern browsers.
+ * @param {HTMLElement} el - The element.
+ * @param {string} eventName - The name of the event (e.g., 'click').
+ * @param {function} handler - The event handler function.
+ */
+function attachEventCompat(el, eventName, handler) {
+  if (el.attachEvent) {
+    el.attachEvent('on' + eventName, handler);
+  } else {
+    el.addEventListener(eventName, handler, false);
+  }
+}
+
+/**
+ * Gets the first element with a given class name (IE8 compatible).
+ * @param {HTMLElement|Document} root - The root element to search within.
+ * @param {string} className - The class name to find.
+ * @returns {HTMLElement|null} The first matching element or null.
+ */
+function getFirstElementByClassName(root, className) {
+  if (root.getElementsByClassName) {
+    var elements = root.getElementsByClassName(className);
+    return elements.length > 0 ? elements[0] : null;
+  } else {
+    var allElements = root.getElementsByTagName('*');
+    for (var i = 0; i < allElements.length; i++) {
+      var el = allElements[i];
+      if (el.className) {
+        var classes = el.className.split(' ');
+        for (var j = 0; j < classes.length; j++) {
+          if (classes[j] === className) {
+            return el;
+          }
+        }
+      }
+    }
+  }
+  return null;
+}
+
+var selectedMethod;
+
+var select_tabs = document.getElementById('select_tabs');
+select_tabs.value = '1';
+attachEventCompat(select_tabs, 'change', function () {
+  setupInfoTabs(select_tabs.value);
+});
+
+/**
+ * Creates and manages tabs for displaying detailed information.
+ * @param {object} method - The method object containing data.
+ */
+function setupInfoTabs(view) {
+  var tabsContainer = document.getElementById('tabs');
+  var infoWrapper = getFirstElementByClassName(document, 'info-wrapper');
+
+  if (!tabsContainer || !infoWrapper) {
+    return;
+  }
+
+  tabsContainer.innerHTML = '';
+  infoWrapper.innerHTML = '';
+
+  var tabsData;
+  if (Number(view) === 1) {
+    tabsData = [
+      {
+        name: '1 ФІЗИКО-ХІМІЧНІ ВЛАСТИВОСТІ',
+        id: 'physChem',
+        renderer: function () {
+          renderPhysChemPropertiesTab(selectedMethod.ID, function (contentElement) {
+            infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(contentElement);
+          });
+        },
+      },
+      {
+        name: '2 РЕКОМ. ГІГІЄНІЧНІ НОРМАТИВИ',
+        id: 'hygStandards',
+        renderer: function () {
+          renderHygienicStandardsTab(selectedMethod.ID, function (contentElement) {
+            infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(contentElement);
+          });
+        },
+      },
+    ];
+  } else if (Number(view) === 2) {
+    tabsData = [
+      {
+        name: '1 ГАЛУЗЬ ВИКОРИСТАННЯ',
+        id: '1',
+        renderer: function () {
+          renderUsingArea(selectedMethod.ID, function (contentElement) {
+            infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(contentElement);
+          });
+        },
+      },
+      {
+        name: '2 НОРМИ ПОХИБКИ ВИМІРЮВАНЬ',
+        id: '2',
+        renderer: function () {
+          renderNorms(selectedMethod.ID, function (contentElement) {
+            infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(contentElement);
+          });
+        },
+      },
+      {
+        name: '3 ХАРАКТЕРИСТИКИ ПОХИБКИ ВИМІРЮВАНЬ І НОРМАТИВИ ОПЕРАТИВНОГО КОНТРОЛЮ',
+        id: '3',
+        renderer: function () {
+          renderNormatyvy(selectedMethod.ID, function (contentElement) {
+            infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(contentElement);
+          });
+        },
+      },
+      {
+        name: '4 ЗАСОБИ ВИМІРЮВАЛЬНОЇ ТЕХНІКИ, ДОПОМІЖНЕ ОБЛАДНАННЯ, ПОСУД, РЕАКТИВИ ТА МАТЕРІАЛИ',
+        id: '4',
+        renderer: function () {},
+      },
+      {
+        name: '5 МЕТОДИКА ВИМІРЮВАННЯ',
+        id: '5',
+        renderer: function () {},
+      },
+      {
+        name: '6 ВИМОГИ БЕЗПЕКИ',
+        id: '6',
+        renderer: function () {},
+      },
+      {
+        name: '7 ВИМОГИ ДО КВАЛІФІКАЦІЇ ОПЕРАТОРІВ',
+        id: '7',
+        renderer: function () {},
+      },
+      {
+        name: '8 УМОВИ ПРОВЕДЕННЯ ВИМІРЮВАНЬ',
+        id: '8',
+        renderer: function () {},
+      },
+      {
+        name: '9 ПІДГОТОВКА ДО ВИКОНАННЯ ВИМІРЮВАНЬ',
+        id: '9',
+        renderer: function () {},
+      },
+      {
+        name: '10 ВИМІРЮВАННЯ',
+        id: '10',
+        renderer: function () {},
+      },
+      {
+        name: '11 ОБРОБКА РЕЗУЛЬТАТІВ ВИМІРЮВАНЬ',
+        id: '11',
+        renderer: function () {},
+      },
+      {
+        name: '12 КОНТРОЛЬ ПОХИБКИ РЕЗУЛЬТАТІВ ВИМІРЮВАНЬ',
+        id: '12',
+        renderer: function () {},
+      },
+      {
+        name: '13 ОФОРМЛЕННЯ РЕЗУЛЬТАТІВ ВИМІРЮВАНЬ',
+        id: '13',
+        renderer: function () {},
+      },
+    ];
+  }
+
+  for (var i = 0; i < tabsData.length; i++) {
+    (function (tabInfo) {
+      var tabElement = document.createElement('div');
+      tabElement.className = 'tab';
+      setText(tabElement, tabInfo.name);
+
+      attachEventCompat(tabElement, 'click', function () {
+        var allTabs = tabsContainer.getElementsByTagName('div');
+        for (var j = 0; j < allTabs.length; j++) {
+          allTabs[j].className = allTabs[j].className.replace(' active', '');
+        }
+        tabElement.className += ' active';
+        infoWrapper.innerHTML = '';
+        setText(infoWrapper, 'Loading ' + tabInfo.name + '...');
+        tabInfo.renderer();
+      });
+      tabsContainer.appendChild(tabElement);
+    })(tabsData[i]);
+  }
+
+  if (tabsData.length > 0 && tabsContainer.firstChild) {
+    if (typeof tabsContainer.firstChild.click === 'function') {
+      tabsContainer.firstChild.click();
+    } else if (tabsContainer.firstChild.fireEvent) {
+      tabsContainer.firstChild.fireEvent('onclick');
+    }
+  } else {
+    setText(infoWrapper, 'No information tabs to display for this method.');
+  }
+}
+
+/**
  * Renders the Hygienic Standards tab content.
  * @param {string} selectedMethodId - The ID of the selected method.
  * @param {function} callback - Callback function with the rendered container.
@@ -206,7 +410,7 @@ function renderHygienicStandardsTab(selectedMethodId, displayCallback) {
 /**
  * Renders the PhysChem Properties tab content (placeholder).
  * @param {string} methodId - The ID of the selected method.
- * @param {function} callback - Callback function with the rendered container.
+ * @param {function} displayCallback - Callback function with the rendered container.
  */
 function renderPhysChemPropertiesTab(methodId, displayCallback) {
   var container = document.createElement('div');
@@ -528,73 +732,360 @@ function renderPhysChemPropertiesTab(methodId, displayCallback) {
   });
 }
 
-/**
- * Creates and manages tabs for displaying detailed information.
- * @param {object} method - The method object containing data.
- */
-function setupInfoTabs(method) {
-  var tabsContainer = document.getElementById('tabs');
-  var infoWrapper = getFirstElementByClassName(document, 'info-wrapper');
+function renderUsingArea(methodId, displayCallback) {
+  var container = document.createElement('div');
+  container.className = 'container';
+  setText(container, 'Loading physical and chemical properties...');
 
-  if (!tabsContainer || !infoWrapper) {
-    return;
-  }
+  getJSON(apiURL + 'method/' + methodId + '/using_area', function (err, data) {
+    setText(container, '');
+    if (err) {
+      showCustomAlert('Error loading halusi: ' + err.message);
+      setText(container, 'Could not load data.');
+    } else {
+      var methodInput = document.createElement('input');
+      methodInput.value = data[0].CHR_METHOD;
+      methodInput.style.width = '100%';
+      methodInput.style.height = '40px';
+      methodInput.style.marginTop = '4px';
+      var areaText = document.createElement('textarea');
+      areaText.value = data[0].USING_AREA;
+      areaText.style.width = '100%';
+      areaText.style.height = '100px';
+      areaText.style.marginTop = '4px';
 
-  tabsContainer.innerHTML = '';
-  infoWrapper.innerHTML = '';
+      getJSON(apiURL + 'method/' + methodId + '/substance_area', function (err, substanceData) {
+        if (err) {
+          showCustomAlert('Error loading halusi: ' + err.message);
+          setText(container, 'Could not load data.');
+        } else {
+          var substanceLabel = document.createElement('label');
+          substanceLabel.className = 'substance-label';
+          setText(substanceLabel, 'Цей документ встановлює методику вимірювання масової частки');
+          var substanceSelect = document.createElement('select');
+          substanceSelect.name = 'substance';
+          var emptyOption = document.createElement('option');
+          emptyOption.value = '';
+          setText(emptyOption, '--Оберіть значення--');
+          substanceSelect.appendChild(emptyOption);
 
-  var tabsData = [
-    {
-      name: 'ФІЗИКО-ХІМІЧНІ ВЛАСТИВОСТІ',
-      id: 'physChem',
-      renderer: function () {
-        renderPhysChemPropertiesTab(method.ID, function (contentElement) {
-          infoWrapper.innerHTML = '';
-          infoWrapper.appendChild(contentElement);
-        });
-      },
-    },
-    {
-      name: 'РЕКОМ. ГІГІЄНІЧНІ НОРМАТИВИ',
-      id: 'hygStandards',
-      renderer: function () {
-        renderHygienicStandardsTab(method.ID, function (contentElement) {
-          infoWrapper.innerHTML = '';
-          infoWrapper.appendChild(contentElement);
-        });
-      },
-    },
-  ];
+          for (var i = 0; i < substanceData.length; i++) {
+            var substanceOption = document.createElement('option');
+            substanceOption.value = substanceData[i].SUBSTANCE_ID;
+            setText(substanceOption, substanceData[i].SUBSTANCE);
+            substanceSelect.appendChild(substanceOption);
+          }
 
-  for (var i = 0; i < tabsData.length; i++) {
-    (function (tabInfo) {
-      var tabElement = document.createElement('div');
-      tabElement.className = 'tab';
-      setText(tabElement, tabInfo.name);
+          container.appendChild(substanceLabel);
+          container.appendChild(substanceSelect);
+          container.appendChild(document.createElement('br'));
+          container.appendChild(methodInput);
 
-      attachEventCompat(tabElement, 'click', function () {
-        var allTabs = tabsContainer.getElementsByTagName('div');
-        for (var j = 0; j < allTabs.length; j++) {
-          allTabs[j].className = allTabs[j].className.replace(' active', '');
+          container.appendChild(document.createElement('br'));
+          container.appendChild(areaText);
+
+          attachEventCompat(substanceSelect, 'change', function () {
+            getJSON(
+              apiURL + 'substance/' + substanceSelect.value + '/object_area',
+              function (err, objectData) {
+                if (err) {
+                  showCustomAlert('Error loading halusi: ' + err.message);
+                  setText(container, 'Could not load data.');
+                } else {
+                  var objectTableWrap = document.createElement('div');
+                  objectTableWrap.className = 'object-table-wrap';
+                  objectTableWrap.id = 'object-table-wrap';
+                  objectTableWrap.style.float = 'right';
+                  objectTableWrap.style.marginTop = '8px';
+                  objectTableWrap.style.marginBottom = '8px';
+                  var objectTable = document.createElement('table');
+                  objectTable.className = 'object-table';
+
+                  var tableHead = document.createElement('thead');
+                  var headerRow = document.createElement('tr');
+                  var headerTitles = [
+                    '#',
+                    'Назва об`єкту аналізу',
+                    'min',
+                    'max',
+                    'Одиниці вимірювання',
+                  ];
+                  var headerClasses = ['id-cell', 'name-cell', 'min-cell', 'max-cell', 'mdr-cell'];
+
+                  for (var i = 0; i < headerTitles.length; i++) {
+                    var th = document.createElement('th');
+                    setText(th, headerTitles[i]);
+                    if (headerClasses[i]) th.className = headerClasses[i];
+                    headerRow.appendChild(th);
+                  }
+                  tableHead.appendChild(headerRow);
+                  objectTable.appendChild(tableHead);
+
+                  var tableBody = document.createElement('tbody');
+
+                  for (var i = 0; i < objectData.length; i++) {
+                    var row = document.createElement('tr');
+                    var idCell = document.createElement('td');
+                    var nameCell = document.createElement('td');
+                    var minCell = document.createElement('td');
+                    var maxCell = document.createElement('td');
+                    var mdrCell = document.createElement('td');
+
+                    setText(idCell, i + 1);
+                    setText(nameCell, objectData[i].OBJECT);
+                    setText(minCell, objectData[i].MIN_VALUE);
+                    setText(maxCell, objectData[i].MAX_VALUE);
+                    setText(mdrCell, objectData[i].UNIT);
+
+                    row.appendChild(idCell);
+                    row.appendChild(nameCell);
+                    row.appendChild(minCell);
+                    row.appendChild(maxCell);
+                    row.appendChild(mdrCell);
+
+                    tableBody.appendChild(row);
+                  }
+
+                  objectTable.appendChild(tableBody);
+                  objectTableWrap.appendChild(objectTable);
+
+                  var oldWrap = document.getElementById('object-table-wrap');
+                  if (oldWrap) {
+                    container.removeChild(oldWrap);
+                  }
+                  container.insertBefore(objectTableWrap, areaText);
+                }
+              }
+            );
+          });
         }
-        tabElement.className += ' active';
-        infoWrapper.innerHTML = '';
-        setText(infoWrapper, 'Loading ' + tabInfo.name + '...');
-        tabInfo.renderer();
       });
-      tabsContainer.appendChild(tabElement);
-    })(tabsData[i]);
-  }
-
-  if (tabsData.length > 0 && tabsContainer.firstChild) {
-    if (typeof tabsContainer.firstChild.click === 'function') {
-      tabsContainer.firstChild.click();
-    } else if (tabsContainer.firstChild.fireEvent) {
-      tabsContainer.firstChild.fireEvent('onclick');
     }
-  } else {
-    setText(infoWrapper, 'No information tabs to display for this method.');
-  }
+  });
+  if (displayCallback) displayCallback(container);
+}
+
+function renderNorms(methodId, displayCallback) {
+  var container = document.createElement('div');
+  container.className = 'container';
+  setText(container, 'Loading physical and chemical properties...');
+
+  getJSON(apiURL + 'method/' + methodId + '/error_area', function (err, data) {
+    setText(container, '');
+    if (err) {
+      showCustomAlert('Error loading halusi: ' + err.message);
+      setText(container, 'Could not load data.');
+    } else {
+      var appruvInput = document.createElement('input');
+      appruvInput.value = data[0].DOC_APPRUV;
+      appruvInput.style.width = '100%';
+      appruvInput.style.height = '40px';
+      appruvInput.style.marginTop = '4px';
+
+      var errorAreaTableWrap = document.createElement('div');
+      errorAreaTableWrap.className = 'error-table-wrap';
+      errorAreaTableWrap.id = 'error-table-wrap';
+      errorAreaTableWrap.style.marginTop = '8px';
+      errorAreaTableWrap.style.marginBottom = '8px';
+      var errorAreaTable = document.createElement('table');
+      errorAreaTable.className = 'object-table';
+
+      var tableHead = document.createElement('thead');
+      var headerRow = document.createElement('tr');
+      var headerTitles = ['#', 'Нормативний документ', 'Док. #', 'Дата', 'Місто'];
+      var headerClasses = ['id-cell', 'name-cell', 'doc-cell', 'date-cell', 'city-cell'];
+
+      for (var i = 0; i < headerTitles.length; i++) {
+        var th = document.createElement('th');
+        setText(th, headerTitles[i]);
+        if (headerClasses[i]) th.className = headerClasses[i];
+        headerRow.appendChild(th);
+      }
+      tableHead.appendChild(headerRow);
+      errorAreaTable.appendChild(tableHead);
+
+      var tableBody = document.createElement('tbody');
+
+      for (var i = 0; i < data.length; i++) {
+        var row = document.createElement('tr');
+        var idCell = document.createElement('td');
+        var nameCell = document.createElement('td');
+        var docCell = document.createElement('td');
+        var dateCell = document.createElement('td');
+        var cityCell = document.createElement('td');
+
+        setText(idCell, i + 1);
+        setText(nameCell, data[i].DOCUMENT);
+        setText(docCell, data[i].DOC_NUMBER);
+        setText(dateCell, formatDateObject(new Date(data[i].DOC_DATE)));
+        console.log(data[i].DOC_DATE);
+        setText(cityCell, data[i].DOC_CITY);
+
+        row.appendChild(idCell);
+        row.appendChild(nameCell);
+        row.appendChild(docCell);
+        row.appendChild(dateCell);
+        row.appendChild(cityCell);
+
+        tableBody.appendChild(row);
+      }
+
+      errorAreaTable.appendChild(tableBody);
+      errorAreaTableWrap.appendChild(errorAreaTable);
+
+      container.appendChild(errorAreaTableWrap);
+      container.appendChild(document.createElement('br'));
+      container.appendChild(appruvInput);
+    }
+  });
+  if (displayCallback) displayCallback(container);
+}
+
+function renderNormatyvy(methodId, displayCallback) {
+  var container = document.createElement('div');
+  container.className = 'container';
+  setText(container, 'Loading physical and chemical properties...');
+
+  getJSON(apiURL + 'method/' + methodId + '/substance_area', function (err, substanceData) {
+    if (err) {
+      showCustomAlert('Error loading halusi: ' + err.message);
+      setText(container, 'Could not load data.');
+    } else {
+      setText(container, '');
+
+      var substanceLabel = document.createElement('label');
+      substanceLabel.className = 'substance-label';
+      setText(substanceLabel, '3.1 Методика забезпечує вимірювання масової частки');
+      var substanceSelect = document.createElement('select');
+      substanceSelect.name = 'substance';
+      var emptyOption = document.createElement('option');
+      emptyOption.value = '';
+      setText(emptyOption, '--Оберіть значення--');
+      substanceSelect.appendChild(emptyOption);
+
+      for (var i = 0; i < substanceData.length; i++) {
+        var substanceOption = document.createElement('option');
+        substanceOption.value = substanceData[i].SUBSTANCE_ID;
+        setText(substanceOption, substanceData[i].SUBSTANCE);
+        substanceSelect.appendChild(substanceOption);
+      }
+
+      container.appendChild(substanceLabel);
+      container.appendChild(substanceSelect);
+      container.appendChild(document.createElement('br'));
+
+      getJSON(apiURL + 'method/' + selectedMethod.ID + '/error_limits', function (err, limitsData) {
+        if (err) {
+          showCustomAlert('Error loading halusi: ' + err.message);
+          setText(container, 'Could not load data.');
+        } else {
+          var limitsInput = document.createElement('input');
+          limitsInput.value = limitsData[0].ERR_LIMITS;
+          limitsInput.style.width = '100%';
+          limitsInput.style.height = '40px';
+          limitsInput.style.marginTop = '4px';
+
+          container.appendChild(limitsInput);
+
+          attachEventCompat(substanceSelect, 'change', function () {
+            getJSON(
+              apiURL + 'substance/' + substanceSelect.value + '/error_control',
+              function (err, errorData) {
+                if (err) {
+                  showCustomAlert('Error loading halusi: ' + err.message);
+                  setText(container, 'Could not load data.');
+                } else {
+                  var errorTableWrap = document.createElement('div');
+                  errorTableWrap.className = 'error-table-wrap';
+                  errorTableWrap.id = 'error-table-wrap';
+                  errorTableWrap.style.float = 'right';
+                  errorTableWrap.style.marginTop = '8px';
+                  errorTableWrap.style.marginBottom = '8px';
+                  var errorTable = document.createElement('table');
+                  errorTable.className = 'object-table';
+
+                  var tableHead = document.createElement('thead');
+                  var headerRow = document.createElement('tr');
+                  var headerTitles = ['#', 'Об`єкту аналізу', 'З', 'По', 'Збіжність', 'Похибка'];
+                  var headerClasses = [
+                    'id-cell',
+                    'name-cell',
+                    'from-cell',
+                    'to-cell',
+                    'match-cell',
+                    'fail-cell',
+                  ];
+
+                  for (var i = 0; i < headerTitles.length; i++) {
+                    var th = document.createElement('th');
+                    setText(th, headerTitles[i]);
+                    if (headerClasses[i]) th.className = headerClasses[i];
+                    headerRow.appendChild(th);
+                  }
+                  tableHead.appendChild(headerRow);
+                  errorTable.appendChild(tableHead);
+
+                  var tableBody = document.createElement('tbody');
+
+                  for (var i = 0; i < errorData.length; i++) {
+                    var row = document.createElement('tr');
+                    var idCell = document.createElement('td');
+                    var nameCell = document.createElement('td');
+                    var fromCell = document.createElement('td');
+                    var toCell = document.createElement('td');
+                    var matchCell = document.createElement('td');
+                    var failCell = document.createElement('td');
+
+                    setText(idCell, i + 1);
+                    setText(nameCell, errorData[i].OBJECT);
+                    setText(fromCell, errorData[i].MIN_VALUE);
+                    setText(toCell, errorData[i].MAX_VALUE);
+                    setText(matchCell, errorData[i].ACCURACY);
+                    setText(failCell, errorData[i].ERROR);
+
+                    row.appendChild(idCell);
+                    row.appendChild(nameCell);
+                    row.appendChild(fromCell);
+                    row.appendChild(toCell);
+                    row.appendChild(matchCell);
+                    row.appendChild(failCell);
+
+                    tableBody.appendChild(row);
+                  }
+
+                  errorTable.appendChild(tableBody);
+                  errorTableWrap.appendChild(errorTable);
+
+                  var oldWrap = document.getElementById('error-table-wrap');
+                  if (oldWrap) {
+                    container.removeChild(oldWrap);
+                  }
+                  container.appendChild(errorTableWrap);
+                }
+              }
+            );
+          });
+        }
+      });
+    }
+  });
+  if (displayCallback) displayCallback(container);
+}
+
+function render(methodId, displayCallback) {
+  var container = document.createElement('div');
+  container.className = 'container';
+  setText(container, 'Loading physical and chemical properties...');
+
+  getJSON(apiURL + 'method/' + methodId + '/', function (err, data) {
+    setText(container, '');
+    if (err) {
+      showCustomAlert('Error loading halusi: ' + err.message);
+      setText(container, 'Could not load data.');
+    } else {
+    }
+  });
+  if (displayCallback) displayCallback(container);
 }
 
 /**
@@ -603,47 +1094,6 @@ function setupInfoTabs(method) {
  */
 function getMethods(callback) {
   getJSON(apiURL + 'method', callback);
-}
-
-/**
- * Attaches an event listener compatibly for IE8 and modern browsers.
- * @param {HTMLElement} el - The element.
- * @param {string} eventName - The name of the event (e.g., 'click').
- * @param {function} handler - The event handler function.
- */
-function attachEventCompat(el, eventName, handler) {
-  if (el.attachEvent) {
-    el.attachEvent('on' + eventName, handler);
-  } else {
-    el.addEventListener(eventName, handler, false);
-  }
-}
-
-/**
- * Gets the first element with a given class name (IE8 compatible).
- * @param {HTMLElement|Document} root - The root element to search within.
- * @param {string} className - The class name to find.
- * @returns {HTMLElement|null} The first matching element or null.
- */
-function getFirstElementByClassName(root, className) {
-  if (root.getElementsByClassName) {
-    var elements = root.getElementsByClassName(className);
-    return elements.length > 0 ? elements[0] : null;
-  } else {
-    var allElements = root.getElementsByTagName('*');
-    for (var i = 0; i < allElements.length; i++) {
-      var el = allElements[i];
-      if (el.className) {
-        var classes = el.className.split(' ');
-        for (var j = 0; j < classes.length; j++) {
-          if (classes[j] === className) {
-            return el;
-          }
-        }
-      }
-    }
-  }
-  return null;
 }
 
 var currentlySelectedRow = null;
@@ -706,8 +1156,9 @@ function fillTable(methods) {
         }
         rowElement.className += ' active';
         currentlySelectedRow = rowElement;
+        selectedMethod = methodCopy;
         fillDetails(methodCopy);
-        setupInfoTabs(methodCopy);
+        setupInfoTabs(1);
       });
     })(method, tr);
 

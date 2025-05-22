@@ -130,18 +130,15 @@ textarea.info {
 }
 
 .tab {
-  padding: 10px;
-  font-size: 14px;
+  padding: 2px;
+  font-size: 10px;
+  font-weight: bold;
   border: 1px solid #ccc;
-  border-bottom: none;
   cursor: pointer;
   margin-bottom: -1px;
   background: #f9f9f9;
-  border-radius: 4px 4px 0 0;
 }
-.tab:last-child {
-  border-bottom: 1px solid #ccc;
-}
+
 .tab.active {
   background: #fff;
   border-bottom-color: #fff;
@@ -322,6 +319,10 @@ table.solubility-table {
   float: right;
   width: 150px;
   margin-top: 4px;
+}
+
+.substance-label {
+  margin-right: 8px;
 }
 
 .control-buttons {
