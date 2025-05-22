@@ -73,7 +73,7 @@ exports.getErrorArea = async (req,res) => {
 
 exports.getErrorLimits = async (req,res) => {
   await fdb.query(
-    `SELECT * FROM v_error_limit WHERE MTHD_ID = ${req.params.id}`,
+    `SELECT * FROM v_error_limits WHERE MTHD_ID = ${req.params.id}`,
     (err, result) => {
       if (err) {
         return res.status(500).send({ msg: "Internal error", error: err });
