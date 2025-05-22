@@ -9,7 +9,7 @@ const fdb = require("./config/dbConnection");
 
 const methodRoutes = require("./api/routes/method");
 const substanceRoutes = require("./api/routes/substance");
-const othersController = require("./api/controllers/others")
+const othersRoutes = require("./api/routes/others")
 
 app.use(cors());
 app.use(morgan("dev"));
@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 app.use("/method", methodRoutes);
 app.use("/substance", substanceRoutes);
-app.use("/others", othersController);
+app.use("/others", othersRoutes);
 
 app.use((err, res) => {
   res.status(err.status || 500).json({
