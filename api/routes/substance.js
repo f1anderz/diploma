@@ -13,6 +13,16 @@ router.get(
   substanceController.getSubstanceVaporPressure,
 );
 
+router.get(
+  "/:id/object_area",
+  substanceController.getObjectArea,
+);
+
+router.get(
+  "/:id/error_control",
+  substanceController.getErrorControl,
+);
+
 router.get("/", substanceController.getSubstances);
 
 router.get("/:id", substanceController.getSubstance);

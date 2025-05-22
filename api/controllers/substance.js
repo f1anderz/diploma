@@ -68,3 +68,27 @@ exports.getSubstanceVaporPressure = async (req, res) => {
     },
   );
 };
+
+exports.getObjectArea = async (req,res) => {
+  await fdb.query(
+    `SELECT * FROM v_object_area WHERE SUBSTANCE_ID = ${req.params.id}`,
+    (err, result) => {
+      if (err) {
+        return res.status(500).send({ msg: "Internal error", error: err });
+      }
+      res.json(result);
+    },
+  );
+};
+
+exports.getErrorControl = async (req,res) => {
+  await fdb.query(
+    `SELECT * FROM v_error_control WHERE SUBSTANCE_ID = ${req.params.id}`,
+    (err, result) => {
+      if (err) {
+        return res.status(500).send({ msg: "Internal error", error: err });
+      }
+      res.json(result);
+    },
+  );
+};
