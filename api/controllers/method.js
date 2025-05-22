@@ -169,7 +169,7 @@ exports.getSafetyRequirements = async (req,res) => {
 
 exports.getMeasurementConditions = async (req,res) => {
   await fdb.query(
-    `SELECT * FROM v_measurement_condition WHERE METHOD_ID = ${req.params.id}`,
+    `SELECT * FROM v_measurement_conditions WHERE METHOD_ID = ${req.params.id}`,
     (err, result) => {
       if (err) {
         return res.status(500).send({ msg: "Internal error", error: err });
