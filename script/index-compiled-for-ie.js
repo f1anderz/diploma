@@ -233,11 +233,21 @@ function setupInfoTabs(view) {
     }, {
       name: '4 ЗАСОБИ ВИМІРЮВАЛЬНОЇ ТЕХНІКИ, ДОПОМІЖНЕ ОБЛАДНАННЯ, ПОСУД, РЕАКТИВИ ТА МАТЕРІАЛИ',
       id: '4',
-      renderer: function renderer() {}
+      renderer: function renderer() {
+        renderEquipment(selectedMethod.ID, function (contentElement) {
+          infoWrapper.innerHTML = '';
+          infoWrapper.appendChild(contentElement);
+        });
+      }
     }, {
       name: '5 МЕТОДИКА ВИМІРЮВАННЯ',
       id: '5',
-      renderer: function renderer() {}
+      renderer: function renderer() {
+        renderMethod(selectedMethod.ID, function (contentElement) {
+          infoWrapper.innerHTML = '';
+          infoWrapper.appendChild(contentElement);
+        });
+      }
     }, {
       name: '6 ВИМОГИ БЕЗПЕКИ',
       id: '6',
@@ -866,7 +876,6 @@ function renderNorms(methodId, displayCallback) {
         setText(nameCell, data[i].DOCUMENT);
         setText(docCell, data[i].DOC_NUMBER);
         setText(dateCell, formatDateObject(new Date(data[i].DOC_DATE)));
-        console.log(data[i].DOC_DATE);
         setText(cityCell, data[i].DOC_CITY);
 
         row.appendChild(idCell);
@@ -1002,6 +1011,332 @@ function renderNormatyvy(methodId, displayCallback) {
                 container.appendChild(errorTableWrap);
               }
             });
+          });
+        }
+      });
+    }
+  });
+  if (displayCallback) displayCallback(container);
+}
+
+function renderEquipment(methodId, displayCallback) {
+  var container = document.createElement('div');
+  container.className = 'container';
+  setText(container, 'Loading equipment properties...');
+
+  getJSON(apiURL + 'method/' + methodId + '/support_equipping', function (err, equipData) {
+    setText(container, '');
+    if (err) {
+      showCustomAlert('Error loading equipment: ' + err.message);
+      setText(container, 'Could not load data.');
+    } else {
+      var equipTableContainer = document.createElement('div');
+      equipTableContainer.style.height = '200px';
+      equipTableContainer.style.overflow = 'auto';
+      equipTableContainer.style.float = 'left';
+      equipTableContainer.style.width = '70%';
+
+      var equipTable = document.createElement('table');
+      var tableHead = document.createElement('thead');
+      var headerRow = document.createElement('tr');
+      var headerTitles = ['#', 'Допоміжне обладнання', 'Док. #'];
+
+      for (var i = 0; i < headerTitles.length; i++) {
+        var th = document.createElement('th');
+        setText(th, headerTitles[i]);
+        headerRow.appendChild(th);
+      }
+      tableHead.appendChild(headerRow);
+      equipTable.appendChild(tableHead);
+
+      var tableBody = document.createElement('tbody');
+
+      for (var i = 0; i < equipData.length; i++) {
+        var row = document.createElement('tr');
+        var idCell = document.createElement('td');
+        var nameCell = document.createElement('td');
+        var docCell = document.createElement('td');
+
+        setText(idCell, i + 1);
+        setText(nameCell, equipData[i].NAMING);
+        setText(docCell, equipData[i].ACCORDING_TO);
+
+        row.appendChild(idCell);
+        row.appendChild(nameCell);
+        row.appendChild(docCell);
+
+        tableBody.appendChild(row);
+      }
+
+      equipTable.appendChild(tableBody);
+      equipTableContainer.appendChild(equipTable);
+
+      getJSON(apiURL + 'method/' + methodId + '/chemical_glassware', function (err, glassData) {
+        setText(container, '');
+        if (err) {
+          showCustomAlert('Error loading glassware: ' + err.message);
+          setText(container, 'Could not load data.');
+        } else {
+          var glassTableContainer = document.createElement('div');
+          glassTableContainer.style.height = '200px';
+          glassTableContainer.style.marginTop = '4px';
+          glassTableContainer.style.overflow = 'auto';
+          glassTableContainer.style.float = 'left';
+          glassTableContainer.style.width = '70%';
+
+          var glassTable = document.createElement('table');
+          var tableHead = document.createElement('thead');
+          var headerRow = document.createElement('tr');
+          var headerTitles = ['#', 'Хімічний посуд', 'Док. #'];
+
+          for (var i = 0; i < headerTitles.length; i++) {
+            var th = document.createElement('th');
+            setText(th, headerTitles[i]);
+            headerRow.appendChild(th);
+          }
+          tableHead.appendChild(headerRow);
+          glassTable.appendChild(tableHead);
+
+          var tableBody = document.createElement('tbody');
+
+          for (var i = 0; i < glassData.length; i++) {
+            var row = document.createElement('tr');
+            var idCell = document.createElement('td');
+            var nameCell = document.createElement('td');
+            var docCell = document.createElement('td');
+
+            setText(idCell, i + 1);
+            setText(nameCell, glassData[i].NAMING);
+            setText(docCell, glassData[i].ACCORDING_TO);
+
+            row.appendChild(idCell);
+            row.appendChild(nameCell);
+            row.appendChild(docCell);
+
+            tableBody.appendChild(row);
+          }
+
+          glassTable.appendChild(tableBody);
+          glassTableContainer.appendChild(glassTable);
+
+          getJSON(apiURL + 'method/' + methodId + '/chemical_agents', function (err, agentsData) {
+            setText(container, '');
+            if (err) {
+              showCustomAlert('Error loading agents: ' + err.message);
+              setText(container, 'Could not load data.');
+            } else {
+              var agentsTableContainer = document.createElement('div');
+              agentsTableContainer.style.height = '200px';
+              agentsTableContainer.style.marginTop = '4px';
+              agentsTableContainer.style.overflow = 'auto';
+              agentsTableContainer.style.float = 'left';
+              agentsTableContainer.style.width = '70%';
+              var agentsTable = document.createElement('table');
+              var tableHead = document.createElement('thead');
+              var headerRow = document.createElement('tr');
+              var headerTitles = ['#', 'Реактивний матеріал', 'Док. #'];
+
+              for (var i = 0; i < headerTitles.length; i++) {
+                var th = document.createElement('th');
+                setText(th, headerTitles[i]);
+                headerRow.appendChild(th);
+              }
+              tableHead.appendChild(headerRow);
+              agentsTable.appendChild(tableHead);
+
+              var tableBody = document.createElement('tbody');
+
+              for (var i = 0; i < agentsData.length; i++) {
+                var row = document.createElement('tr');
+                var idCell = document.createElement('td');
+                var nameCell = document.createElement('td');
+                var docCell = document.createElement('td');
+
+                setText(idCell, i + 1);
+                setText(nameCell, agentsData[i].NAMING);
+                setText(docCell, agentsData[i].ACCORDING_TO);
+
+                row.appendChild(idCell);
+                row.appendChild(nameCell);
+                row.appendChild(docCell);
+
+                tableBody.appendChild(row);
+              }
+
+              agentsTable.appendChild(tableBody);
+              agentsTableContainer.appendChild(agentsTable);
+
+              getJSON(apiURL + 'method/' + methodId + '/support_extantion', function (err, extantionData) {
+                setText(container, '');
+                if (err) {
+                  showCustomAlert('Error loading extantion: ' + err.message);
+                  setText(container, 'Could not load data.');
+                } else {
+                  var extantionArea = document.createElement('textarea');
+                  extantionArea.style.width = '28%';
+                  extantionArea.style.height = '608px';
+                  extantionArea.style.position = 'absolute';
+                  extantionArea.style.right = '0';
+                  extantionArea.style.top = '0';
+                  extantionArea.value = extantionData[0].ERMISSION;
+
+                  var wrapper = document.createElement('div');
+
+                  wrapper.appendChild(equipTableContainer);
+                  wrapper.appendChild(glassTableContainer);
+                  wrapper.appendChild(agentsTableContainer);
+
+                  container.style.position = 'relative';
+                  container.appendChild(wrapper);
+                  container.appendChild(extantionArea);
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+  if (displayCallback) displayCallback(container);
+}
+
+function renderMethod(methodId, displayCallback) {
+  var container = document.createElement('div');
+  container.className = 'container';
+  setText(container, 'Loading methodic...');
+
+  getJSON(apiURL + 'method/' + methodId + '/principle', function (err, princData) {
+    setText(container, '');
+    if (err) {
+      showCustomAlert('Error loading principle: ' + err.message);
+      setText(container, 'Could not load data.');
+    } else {
+      var principleArea = document.createElement('textarea');
+      principleArea.value = princData[0].PRINCIPLE;
+      principleArea.style.width = '80%';
+      principleArea.style.height = '100px';
+      principleArea.style.display = 'block';
+
+      var durationContainer = document.createElement('div');
+      durationContainer.style.width = '18%';
+      durationContainer.style.marginLeft = '2%';
+      durationContainer.style.position = 'absolute';
+      durationContainer.style.right = '0';
+      durationContainer.style.top = '0';
+      var durationLabel = document.createElement('label');
+      setText(durationLabel, 'Тривалість одного визначення:');
+      var durationInput = document.createElement('input');
+      durationInput.value = princData[0].DURATION;
+      durationContainer.appendChild(durationLabel);
+      durationContainer.appendChild(durationInput);
+
+      getJSON(apiURL + 'method/' + methodId + '/substance_area', function (err, substanceData) {
+        setText(container, '');
+        if (err) {
+          showCustomAlert('Error loading substance area: ' + err.message);
+          setText(container, 'Could not load data.');
+        } else {
+          var selectivityArea = document.createElement('textarea');
+          selectivityArea.value = princData[0].SELECTIVITY;
+          selectivityArea.style.width = '75%';
+          selectivityArea.style.height = '100px';
+          selectivityArea.style.display = 'block';
+          selectivityArea.style.marginTop = '4px';
+
+          var substanceContainer = document.createElement('div');
+          substanceContainer.style.width = '23%';
+          substanceContainer.style.height = '100px';
+          substanceContainer.style.marginLeft = '2%';
+          substanceContainer.style.position = 'absolute';
+          substanceContainer.style.top = '124px';
+          substanceContainer.style.right = '0';
+
+          var substanceLabel = document.createElement('label');
+          substanceLabel.className = 'substance-label';
+          setText(substanceLabel, 'Цільова речовина');
+          var substanceSelect = document.createElement('select');
+          substanceSelect.name = 'substance';
+          var emptyOption = document.createElement('option');
+          emptyOption.value = '';
+          setText(emptyOption, '--Оберіть значення--');
+          substanceSelect.appendChild(emptyOption);
+
+          for (var i = 0; i < substanceData.length; i++) {
+            var substanceOption = document.createElement('option');
+            substanceOption.value = substanceData[i].SUBSTANCE_ID;
+            setText(substanceOption, substanceData[i].SUBSTANCE);
+            substanceSelect.appendChild(substanceOption);
+          }
+
+          substanceContainer.appendChild(substanceLabel);
+          substanceContainer.appendChild(substanceSelect);
+
+          getJSON(apiURL + 'method/' + methodId + '/strange_substances', function (err, strangeData) {
+            setText(container, '');
+            if (err) {
+              showCustomAlert('Error loading strange substances: ' + err.message);
+              setText(container, 'Could not load data.');
+            } else {
+              var strangeSubsContainer = document.createElement('div');
+              strangeSubsContainer.style.width = '100%';
+
+              var strangeSubstances = document.createElement('div');
+              setText(strangeSubstances, 'Сторонні речовини');
+              strangeSubstances.style.width = '15%';
+
+              var strangeSubstancesTableContainer = document.createElement('div');
+              strangeSubstancesTableContainer.style.height = '200px';
+              strangeSubstancesTableContainer.style.width = '83%';
+              strangeSubstancesTableContainer.style.marginTop = '-28px';
+              strangeSubstancesTableContainer.style.marginLeft = '15%';
+              strangeSubstancesTableContainer.style.overflow = 'auto';
+              var strangeSubstancesTable = document.createElement('table');
+              var tableHead = document.createElement('thead');
+              var headerRow = document.createElement('tr');
+              var headerTitles = ['#', 'Стороння речовина', 'Джерело'];
+
+              for (var i = 0; i < headerTitles.length; i++) {
+                var th = document.createElement('th');
+                setText(th, headerTitles[i]);
+                headerRow.appendChild(th);
+              }
+              tableHead.appendChild(headerRow);
+              strangeSubstancesTable.appendChild(tableHead);
+
+              var tableBody = document.createElement('tbody');
+
+              for (var i = 0; i < strangeData.length; i++) {
+                var row = document.createElement('tr');
+                var idCell = document.createElement('td');
+                var nameCell = document.createElement('td');
+                var docCell = document.createElement('td');
+
+                setText(idCell, i + 1);
+                setText(nameCell, strangeData[i].SUBSTANCE);
+                setText(docCell, strangeData[i].SOURCE);
+
+                row.appendChild(idCell);
+                row.appendChild(nameCell);
+                row.appendChild(docCell);
+
+                tableBody.appendChild(row);
+              }
+
+              strangeSubstancesTable.appendChild(tableBody);
+              strangeSubstancesTableContainer.appendChild(strangeSubstancesTable);
+
+              strangeSubsContainer.appendChild(strangeSubstances);
+              strangeSubsContainer.appendChild(strangeSubstancesTableContainer);
+
+              container.style.position = 'relative';
+              container.appendChild(principleArea);
+              container.appendChild(durationContainer);
+              container.appendChild(document.createElement('br'));
+              container.appendChild(selectivityArea);
+              container.appendChild(substanceContainer);
+              container.appendChild(document.createElement('br'));
+              container.appendChild(strangeSubsContainer);
+            }
           });
         }
       });
