@@ -6,10 +6,6 @@ if (!window.JSON || !window.JSON.parse || !window.JSON.stringify) {
 
 var apiURL = 'http://34.227.205.75:3000/';
 
-/**
- * Shows a custom modal alert.
- * @param {string} message - The message to display.
- */
 function showCustomAlert(message) {
   var modal = document.getElementById('customAlertModal');
   var messageEl = document.getElementById('customAlertMessage');
@@ -28,11 +24,6 @@ function showCustomAlert(message) {
   okButton.onclick = onOkClick;
 }
 
-/**
- * Formats a Date object into DD.MM.YYYY string.
- * @param {Date} dateObj - The Date object to format.
- * @returns {string} Formatted date string or an empty string if invalid.
- */
 function formatDateObject(dateObj) {
   if (!(dateObj instanceof Date) || isNaN(dateObj.getTime())) {
     return '';
@@ -47,11 +38,6 @@ function formatDateObject(dateObj) {
   return dayStr + '.' + monthStr + '.' + year;
 }
 
-/**
- * Makes an AJAX GET request. Handles IE8 XDomainRequest.
- * @param {string} url - The URL to fetch.
- * @param {function} callback - Callback function (err, data).
- */
 function getJSON(url, callback) {
   if (window.XDomainRequest) {
     var xdr = new XDomainRequest();
@@ -102,11 +88,6 @@ function getJSON(url, callback) {
   }
 }
 
-/**
- * Sets the text content of an element, compatible with older IE.
- * @param {HTMLElement} el - The element.
- * @param {string} text - The text to set.
- */
 function setText(el, text) {
   if (el) {
     if (typeof el.textContent !== 'undefined') {
@@ -117,12 +98,6 @@ function setText(el, text) {
   }
 }
 
-/**
- * Attaches an event listener compatibly for IE8 and modern browsers.
- * @param {HTMLElement} el - The element.
- * @param {string} eventName - The name of the event (e.g., 'click').
- * @param {function} handler - The event handler function.
- */
 function attachEventCompat(el, eventName, handler) {
   if (el.attachEvent) {
     el.attachEvent('on' + eventName, handler);
@@ -131,12 +106,6 @@ function attachEventCompat(el, eventName, handler) {
   }
 }
 
-/**
- * Gets the first element with a given class name (IE8 compatible).
- * @param {HTMLElement|Document} root - The root element to search within.
- * @param {string} className - The class name to find.
- * @returns {HTMLElement|null} The first matching element or null.
- */
 function getFirstElementByClassName(root, className) {
   if (root.getElementsByClassName) {
     var elements = root.getElementsByClassName(className);
@@ -166,10 +135,6 @@ attachEventCompat(select_tabs, 'change', function () {
   setupInfoTabs(select_tabs.value);
 });
 
-/**
- * Creates and manages tabs for displaying detailed information.
- * @param {object} method - The method object containing data.
- */
 function setupInfoTabs(view) {
   var tabsContainer = document.getElementById('tabs');
   var infoWrapper = getFirstElementByClassName(document, 'info-wrapper');
@@ -329,11 +294,6 @@ function setupInfoTabs(view) {
   }
 }
 
-/**
- * Renders the Hygienic Standards tab content.
- * @param {string} selectedMethodId - The ID of the selected method.
- * @param {function} callback - Callback function with the rendered container.
- */
 function renderHygienicStandardsTab(selectedMethodId, displayCallback) {
   var container = document.createElement('div');
   container.className = 'container';
@@ -409,11 +369,6 @@ function renderHygienicStandardsTab(selectedMethodId, displayCallback) {
   });
 }
 
-/**
- * Renders the PhysChem Properties tab content (placeholder).
- * @param {string} methodId - The ID of the selected method.
- * @param {function} displayCallback - Callback function with the rendered container.
- */
 function renderPhysChemPropertiesTab(methodId, displayCallback) {
   var container = document.createElement('div');
   container.className = 'container';
@@ -1591,20 +1546,12 @@ function renderConditions(methodId, displayCallback) {
   if (displayCallback) displayCallback(container);
 }
 
-/**
- * Fetches all methods from the API.
- * @param {function} callback - Callback function (err, methods).
- */
 function getMethods(callback) {
   getJSON(apiURL + 'method', callback);
 }
 
 var currentlySelectedRow = null;
 
-/**
- * Fills the methods table with data.
- * @param {Array<object>} methods - Array of method objects.
- */
 function fillTable(methods) {
   var methodsTableParent = getFirstElementByClassName(document, 'methods-table-wrapper');
   if (!methodsTableParent) {
@@ -1661,7 +1608,7 @@ function fillTable(methods) {
         currentlySelectedRow = rowElement;
         selectedMethod = methodCopy;
         fillDetails(methodCopy);
-        setupInfoTabs(1);
+        setupInfoTabs(select_tabs.value);
       });
     })(method, tr);
 
@@ -1669,10 +1616,6 @@ function fillTable(methods) {
   }
 }
 
-/**
- * Fills the details section with data from the selected method.
- * @param {object} method - The selected method object.
- */
 function fillDetails(method) {
   var approveInfo = document.getElementById('approved-info');
   var orderNumberInput = document.getElementById('order-number-info');
