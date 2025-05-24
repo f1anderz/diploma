@@ -147,6 +147,9 @@ function setupInfoTabs(view) {
   infoWrapper.innerHTML = '';
 
   var tabsData;
+  var header = document.createElement('p');
+  header.style.width = '100%';
+  header.style.textAlign = 'center';
   if (Number(view) === 1) {
     tabsData = [
       {
@@ -154,7 +157,9 @@ function setupInfoTabs(view) {
         id: 'physChem',
         renderer: function () {
           renderPhysChemPropertiesTab(selectedMethod.ID, function (contentElement) {
+            setText(header, '1 ФІЗИКО-ХІМІЧНІ ВЛАСТИВОСТІ');
             infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(header);
             infoWrapper.appendChild(contentElement);
           });
         },
@@ -164,7 +169,9 @@ function setupInfoTabs(view) {
         id: 'hygStandards',
         renderer: function () {
           renderHygienicStandardsTab(selectedMethod.ID, function (contentElement) {
+            setText(header, '2 РЕКОМ. ГІГІЄНІЧНІ НОРМАТИВИ');
             infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(header);
             infoWrapper.appendChild(contentElement);
           });
         },
@@ -177,7 +184,9 @@ function setupInfoTabs(view) {
         id: '1',
         renderer: function () {
           renderUsingArea(selectedMethod.ID, function (contentElement) {
+            setText(header, '1 ГАЛУЗЬ ВИКОРИСТАННЯ');
             infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(header);
             infoWrapper.appendChild(contentElement);
           });
         },
@@ -187,7 +196,9 @@ function setupInfoTabs(view) {
         id: '2',
         renderer: function () {
           renderNorms(selectedMethod.ID, function (contentElement) {
+            setText(header, '2 НОРМИ ПОХИБКИ ВИМІРЮВАНЬ');
             infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(header);
             infoWrapper.appendChild(contentElement);
           });
         },
@@ -197,7 +208,12 @@ function setupInfoTabs(view) {
         id: '3',
         renderer: function () {
           renderNormatyvy(selectedMethod.ID, function (contentElement) {
+            setText(
+              header,
+              '3 ХАРАКТЕРИСТИКИ ПОХИБКИ ВИМІРЮВАНЬ І НОРМАТИВИ ОПЕРАТИВНОГО КОНТРОЛЮ'
+            );
             infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(header);
             infoWrapper.appendChild(contentElement);
           });
         },
@@ -207,7 +223,12 @@ function setupInfoTabs(view) {
         id: '4',
         renderer: function () {
           renderEquipment(selectedMethod.ID, function (contentElement) {
+            setText(
+              header,
+              '4 ЗАСОБИ ВИМІРЮВАЛЬНОЇ ТЕХНІКИ, ДОПОМІЖНЕ ОБЛАДНАННЯ, ПОСУД, РЕАКТИВИ ТА МАТЕРІАЛИ'
+            );
             infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(header);
             infoWrapper.appendChild(contentElement);
           });
         },
@@ -217,7 +238,9 @@ function setupInfoTabs(view) {
         id: '5',
         renderer: function () {
           renderMethod(selectedMethod.ID, function (contentElement) {
+            setText(header, '5 МЕТОДИКА ВИМІРЮВАННЯ');
             infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(header);
             infoWrapper.appendChild(contentElement);
           });
         },
@@ -227,7 +250,9 @@ function setupInfoTabs(view) {
         id: '6',
         renderer: function () {
           renderSafety(selectedMethod.ID, function (contentElement) {
+            setText(header, '6 ВИМОГИ БЕЗПЕКИ');
             infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(header);
             infoWrapper.appendChild(contentElement);
           });
         },
@@ -237,7 +262,9 @@ function setupInfoTabs(view) {
         id: '7',
         renderer: function () {
           renderSkills(function (contentElement) {
+            setText(header, '7 ВИМОГИ ДО КВАЛІФІКАЦІЇ ОПЕРАТОРІВ');
             infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(header);
             infoWrapper.appendChild(contentElement);
           });
         },
@@ -247,7 +274,9 @@ function setupInfoTabs(view) {
         id: '8',
         renderer: function () {
           renderConditions(selectedMethod.ID, function (contentElement) {
+            setText(header, '8 УМОВИ ПРОВЕДЕННЯ ВИМІРЮВАНЬ');
             infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(header);
             infoWrapper.appendChild(contentElement);
           });
         },
@@ -856,17 +885,22 @@ function renderNorms(methodId, displayCallback) {
       showCustomAlert('Error loading halusi: ' + err.message);
       setText(container, 'Could not load data.');
     } else {
+      var inputLabel = document.createElement('p');
+      setText(inputLabel, 'Затверджені:');
       var appruvInput = document.createElement('input');
       appruvInput.value = data[0].DOC_APPRUV;
       appruvInput.style.width = '100%';
       appruvInput.style.height = '40px';
       appruvInput.style.marginTop = '4px';
 
+      var tableLabel = document.createElement('p');
+      setText(tableLabel, 'Норми похибки вимірювань регламентовані:');
       var errorAreaTableWrap = document.createElement('div');
       errorAreaTableWrap.className = 'error-table-wrap';
       errorAreaTableWrap.id = 'error-table-wrap';
       errorAreaTableWrap.style.marginTop = '8px';
       errorAreaTableWrap.style.marginBottom = '8px';
+      errorAreaTableWrap.style.width = '100%';
       var errorAreaTable = document.createElement('table');
       errorAreaTable.className = 'object-table';
 
@@ -912,8 +946,9 @@ function renderNorms(methodId, displayCallback) {
       errorAreaTable.appendChild(tableBody);
       errorAreaTableWrap.appendChild(errorAreaTable);
 
+      container.appendChild(tableLabel);
       container.appendChild(errorAreaTableWrap);
-      container.appendChild(document.createElement('br'));
+      container.appendChild(inputLabel);
       container.appendChild(appruvInput);
     }
   });
@@ -977,9 +1012,9 @@ function renderNormatyvy(methodId, displayCallback) {
                   var errorTableWrap = document.createElement('div');
                   errorTableWrap.className = 'error-table-wrap';
                   errorTableWrap.id = 'error-table-wrap';
-                  errorTableWrap.style.float = 'right';
                   errorTableWrap.style.marginTop = '8px';
                   errorTableWrap.style.marginBottom = '8px';
+                  errorTableWrap.style.width = '100%';
                   var errorTable = document.createElement('table');
                   errorTable.className = 'object-table';
 
@@ -1062,10 +1097,11 @@ function renderEquipment(methodId, displayCallback) {
       showCustomAlert('Error loading equipment: ' + err.message);
       setText(container, 'Could not load data.');
     } else {
+      var equipLabel = document.createElement('p');
+      setText(equipLabel, '4.1 Засоби вимірювальної техніки та допоміжнe обладнання');
       var equipTableContainer = document.createElement('div');
       equipTableContainer.style.height = '200px';
       equipTableContainer.style.overflow = 'auto';
-      equipTableContainer.style.float = 'left';
       equipTableContainer.style.width = '70%';
 
       var equipTable = document.createElement('table');
@@ -1109,11 +1145,12 @@ function renderEquipment(methodId, displayCallback) {
           showCustomAlert('Error loading glassware: ' + err.message);
           setText(container, 'Could not load data.');
         } else {
+          var glassLabel = document.createElement('p');
+          setText(glassLabel, '4.2 Посуд');
           var glassTableContainer = document.createElement('div');
           glassTableContainer.style.height = '200px';
           glassTableContainer.style.marginTop = '4px';
           glassTableContainer.style.overflow = 'auto';
-          glassTableContainer.style.float = 'left';
           glassTableContainer.style.width = '70%';
 
           var glassTable = document.createElement('table');
@@ -1157,11 +1194,12 @@ function renderEquipment(methodId, displayCallback) {
               showCustomAlert('Error loading agents: ' + err.message);
               setText(container, 'Could not load data.');
             } else {
+              var agentsLabel = document.createElement('p');
+              setText(agentsLabel, '4.3 Реактиви та матеріали');
               var agentsTableContainer = document.createElement('div');
               agentsTableContainer.style.height = '200px';
               agentsTableContainer.style.marginTop = '4px';
               agentsTableContainer.style.overflow = 'auto';
-              agentsTableContainer.style.float = 'left';
               agentsTableContainer.style.width = '70%';
               var agentsTable = document.createElement('table');
               var tableHead = document.createElement('thead');
@@ -1214,14 +1252,14 @@ function renderEquipment(methodId, displayCallback) {
                     extantionArea.style.top = '0';
                     extantionArea.value = extantionData[0].ERMISSION;
 
-                    var wrapper = document.createElement('div');
-
-                    wrapper.appendChild(equipTableContainer);
-                    wrapper.appendChild(glassTableContainer);
-                    wrapper.appendChild(agentsTableContainer);
+                    container.appendChild(equipLabel);
+                    container.appendChild(equipTableContainer);
+                    container.appendChild(glassLabel);
+                    container.appendChild(glassTableContainer);
+                    container.appendChild(agentsLabel);
+                    container.appendChild(agentsTableContainer);
 
                     container.style.position = 'relative';
-                    container.appendChild(wrapper);
                     container.appendChild(extantionArea);
                   }
                 }
@@ -1246,6 +1284,8 @@ function renderMethod(methodId, displayCallback) {
       showCustomAlert('Error loading principle: ' + err.message);
       setText(container, 'Could not load data.');
     } else {
+      var principleLabel = document.createElement('p');
+      setText(principleLabel, '5.1 Принцип методу');
       var principleArea = document.createElement('textarea');
       principleArea.value = princData[0].PRINCIPLE;
       principleArea.style.width = '80%';
@@ -1271,6 +1311,8 @@ function renderMethod(methodId, displayCallback) {
           showCustomAlert('Error loading substance area: ' + err.message);
           setText(container, 'Could not load data.');
         } else {
+          var selectLabel = document.createElement('p');
+          setText(selectLabel, '5.2 Вибірковість методу');
           var selectivityArea = document.createElement('textarea');
           selectivityArea.value = princData[0].SELECTIVITY;
           selectivityArea.style.width = '75%';
@@ -1366,9 +1408,11 @@ function renderMethod(methodId, displayCallback) {
                 strangeSubsContainer.appendChild(strangeSubstancesTableContainer);
 
                 container.style.position = 'relative';
+                container.appendChild(principleLabel);
                 container.appendChild(principleArea);
                 container.appendChild(durationContainer);
                 container.appendChild(document.createElement('br'));
+                container.appendChild(selectLabel);
                 container.appendChild(selectivityArea);
                 container.appendChild(substanceContainer);
                 container.appendChild(document.createElement('br'));
@@ -1561,6 +1605,8 @@ function renderConditions(methodId, displayCallback) {
           showCustomAlert('Error loading room conditions: ' + err.message);
           setText(container, 'Could not load data.');
         } else {
+          var roomLabel = document.createElement('p');
+          setText(roomLabel, 'Умови в лабораторному приміщенні:');
           var roomTableContainer = document.createElement('div');
           roomTableContainer.style.height = '150px';
           roomTableContainer.style.overflow = 'auto';
@@ -1606,6 +1652,7 @@ function renderConditions(methodId, displayCallback) {
           container.appendChild(measureLabel);
           container.appendChild(measureArea);
           container.appendChild(document.createElement('br'));
+          container.appendChild(roomLabel);
           container.appendChild(roomTableContainer);
         }
       });
