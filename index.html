@@ -1,71 +1,64 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>CMPI- GUI</title>
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <div class="wrapper">
-      <div class="control">
-        <label for="select_tabs"></label>
-        <select name="tabs" id="select_tabs">
-          <option value="1">I ЗАГАЛЬНА ЧАСТИНА</option>
-          <option value="2">II МЕТОДИКА ВИМІРЮВАННЯ МАСОВОЇ ЧАСТКИ</option>
-        </select>
-      </div>
+<head>
+  <meta charset="UTF-8"/>
+  <title>CMPI- GUI</title>
+  <link rel="stylesheet" href="./style.css"/>
+</head>
+<body>
+<div class="wrapper">
+  <div class="control">
+    <label for="select_tabs"></label>
+    <select name="tabs" id="select_tabs">
+      <option value="1">I ЗАГАЛЬНА ЧАСТИНА</option>
+      <option value="2">II МЕТОДИКА ВИМІРЮВАННЯ МАСОВОЇ ЧАСТКИ</option>
+    </select>
+  </div>
 
-      <div class="main-form">
-        <div class="methods-table-wrapper">
-          <table class="methods">
-            <thead>
-              <tr>
-                <th class="id-cell">Метод №</th>
-                <th class="name-cell">Назва</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-
-        <div class="details">
-          <div class="approved">
-            <label for="approved-info">Затверджено</label>
-            <textarea class="info" name="approved-info" id="approved-info"></textarea>
-          </div>
-          <div class="order">
-            <div class="order-number">
-              <label for="order-number-info">Наказ №</label>
-              <input class="info" type="text" name="order-number-info" id="order-number-info" />
-            </div>
-            <div class="order-date">
-              <label for="order-date-info">від</label>
-              <input class="info" type="text" name="order-date-info" id="order-date-info" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="info-form">
-        <div id="tabs"></div>
-        <div class="info-wrapper">Оберіть метод</div>
-      </div>
-
-      <!--<div class="control-buttons">-->
-      <!--  <button type="button">Cancel</button>-->
-      <!--  <button type="button">Save</button>-->
-      <!--  <button type="button">Exit</button>-->
-      <!--</div>-->
+  <div class="main-form">
+    <div class="methods-table-wrapper">
+      <table class="methods">
+        <thead>
+        <tr>
+          <th class="id-cell">Метод №</th>
+          <th class="name-cell">Назва</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
 
-    <div id="customAlertModal">
-      <div class="modal-content">
-        <p id="customAlertMessage"></p>
-        <button id="customAlertOkButton">OK</button>
+    <div class="details">
+      <div class="approved">
+        <label for="approved-info">Затверджено</label>
+        <textarea class="info" name="approved-info" id="approved-info"></textarea>
+      </div>
+      <div class="order">
+        <div class="order-number">
+          <label for="order-number-info">Наказ №</label>
+          <input class="info" type="text" name="order-number-info" id="order-number-info"/>
+        </div>
+        <div class="order-date">
+          <label for="order-date-info">від</label>
+          <input class="info" type="text" name="order-date-info" id="order-date-info"/>
+        </div>
       </div>
     </div>
+  </div>
 
-    <!-- Replaced module script with compiled one -->
-    <script src="./script/index-compiled-for-ie.js"></script>
-  </body>
+  <div class="info-form">
+    <div id="tabs"></div>
+    <div class="info-wrapper">Оберіть метод</div>
+  </div>
+</div>
+
+<div id="customAlertModal">
+  <div class="modal-content">
+    <p id="customAlertMessage"></p>
+    <button id="customAlertOkButton">OK</button>
+  </div>
+</div>
+
+<script src="./index.js"></script>
+</body>
 </html>
