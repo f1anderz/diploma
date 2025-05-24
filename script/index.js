@@ -260,17 +260,32 @@ function setupInfoTabs(view) {
       {
         name: '6 ВИМОГИ БЕЗПЕКИ',
         id: '6',
-        renderer: function () {},
+        renderer: function () {
+          renderSafety(selectedMethod.ID, function (contentElement) {
+            infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(contentElement);
+          });
+        },
       },
       {
         name: '7 ВИМОГИ ДО КВАЛІФІКАЦІЇ ОПЕРАТОРІВ',
         id: '7',
-        renderer: function () {},
+        renderer: function () {
+          renderSkills(function (contentElement) {
+            infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(contentElement);
+          });
+        },
       },
       {
         name: '8 УМОВИ ПРОВЕДЕННЯ ВИМІРЮВАНЬ',
         id: '8',
-        renderer: function () {},
+        renderer: function () {
+          renderConditions(selectedMethod.ID, function (contentElement) {
+            infoWrapper.innerHTML = '';
+            infoWrapper.appendChild(contentElement);
+          });
+        },
       },
       {
         name: '9 ПІДГОТОВКА ДО ВИКОНАННЯ ВИМІРЮВАНЬ',
@@ -1413,17 +1428,232 @@ function renderMethod(methodId, displayCallback) {
   if (displayCallback) displayCallback(container);
 }
 
-function render(methodId, displayCallback) {
+function renderSafety(methodId, displayCallback) {
   var container = document.createElement('div');
   container.className = 'container';
-  setText(container, 'Loading physical and chemical properties...');
+  setText(container, 'Loading safety requirements properties...');
 
-  getJSON(apiURL + 'method/' + methodId + '/', function (err, data) {
+  getJSON(apiURL + 'method/' + methodId + '/safety_requirements', function (err, safetyData) {
     setText(container, '');
     if (err) {
-      showCustomAlert('Error loading halusi: ' + err.message);
+      showCustomAlert('Error loading safety requirements: ' + err.message);
       setText(container, 'Could not load data.');
     } else {
+      var safetyTableContainer = document.createElement('div');
+      safetyTableContainer.style.height = '150px';
+      safetyTableContainer.style.overflow = 'auto';
+      var safetyTable = document.createElement('table');
+      var tableHead = document.createElement('thead');
+      var headerRow = document.createElement('tr');
+      var headerTitles = ['#', 'Вимога'];
+
+      for (var i = 0; i < headerTitles.length; i++) {
+        var th = document.createElement('th');
+        setText(th, headerTitles[i]);
+        headerRow.appendChild(th);
+      }
+      tableHead.appendChild(headerRow);
+      safetyTable.appendChild(tableHead);
+
+      var tableBody = document.createElement('tbody');
+
+      for (var i = 0; i < safetyData.length; i++) {
+        var row = document.createElement('tr');
+        var idCell = document.createElement('td');
+        var nameCell = document.createElement('td');
+
+        setText(idCell, i + 1);
+        setText(nameCell, safetyData[i].REQUIREMENT);
+
+        row.appendChild(idCell);
+        row.appendChild(nameCell);
+
+        tableBody.appendChild(row);
+      }
+
+      safetyTable.appendChild(tableBody);
+      safetyTableContainer.appendChild(safetyTable);
+
+      getJSON(apiURL + 'others/required_reglament', function (err, reglamentData) {
+        setText(container, '');
+        if (err) {
+          showCustomAlert('Error loading reglament: ' + err.message);
+          setText(container, 'Could not load data.');
+        } else {
+          var reglamentTableContainer = document.createElement('div');
+          reglamentTableContainer.style.height = '150px';
+          reglamentTableContainer.style.overflow = 'auto';
+          reglamentTableContainer.style.marginTop = '8px';
+          var reglamentTable = document.createElement('table');
+          var tableHead = document.createElement('thead');
+          var headerRow = document.createElement('tr');
+          var headerTitles = ['#', 'Нормативний документ', 'Реєстровий код'];
+
+          for (var i = 0; i < headerTitles.length; i++) {
+            var th = document.createElement('th');
+            setText(th, headerTitles[i]);
+            headerRow.appendChild(th);
+          }
+          tableHead.appendChild(headerRow);
+          reglamentTable.appendChild(tableHead);
+
+          var tableBody = document.createElement('tbody');
+
+          for (var i = 0; i < reglamentData.length; i++) {
+            var row = document.createElement('tr');
+            var idCell = document.createElement('td');
+            var nameCell = document.createElement('td');
+            var codeCell = document.createElement('td');
+
+            setText(idCell, i + 1);
+            setText(nameCell, reglamentData[i].NORM_DOC);
+            setText(codeCell, reglamentData[i].DOC_REG);
+
+            row.appendChild(idCell);
+            row.appendChild(nameCell);
+            row.appendChild(codeCell);
+
+            tableBody.appendChild(row);
+          }
+
+          reglamentTable.appendChild(tableBody);
+          reglamentTableContainer.appendChild(reglamentTable);
+
+          container.appendChild(safetyTableContainer);
+          container.appendChild(reglamentTableContainer);
+        }
+      });
+    }
+  });
+  if (displayCallback) displayCallback(container);
+}
+
+function renderSkills(displayCallback) {
+  var container = document.createElement('div');
+  container.className = 'container';
+  setText(container, 'Loading operator skills...');
+
+  getJSON(apiURL + 'others/operator_skills', function (err, skillsData) {
+    setText(container, '');
+    if (err) {
+      showCustomAlert('Error loading operator skills: ' + err.message);
+      setText(container, 'Could not load data.');
+    } else {
+      var measurementLabel = document.createElement('div');
+      setText(measurementLabel, 'Хроматографічні вимірювання');
+
+      var measurementText = '';
+      for (var i = 0; i < skillsData.length; i++) {
+        measurementText += skillsData[i].MEASUREMENT + '\n';
+      }
+      var measurementArea = document.createElement('textarea');
+      measurementArea.style.width = '100%';
+      measurementArea.style.height = '150px';
+      measurementArea.value = measurementText;
+
+      var preparationLabel = document.createElement('div');
+      setText(preparationLabel, 'Підготовка проб');
+
+      var preparationText = '';
+      for (var i = 0; i < skillsData.length; i++) {
+        preparationText += skillsData[i].PREPARATION + '\n';
+      }
+      var preparationArea = document.createElement('textarea');
+      preparationArea.style.width = '100%';
+      preparationArea.style.height = '150px';
+      preparationArea.style.marginTop = '8px';
+      preparationArea.value = preparationText;
+
+      container.appendChild(measurementLabel);
+      container.appendChild(measurementArea);
+      container.appendChild(preparationLabel);
+      container.appendChild(preparationArea);
+    }
+  });
+  if (displayCallback) displayCallback(container);
+}
+
+function renderConditions(methodId, displayCallback) {
+  var container = document.createElement('div');
+  container.className = 'container';
+  setText(container, 'Loading measurement conditions...');
+
+  getJSON(apiURL + 'method/' + methodId + '/measurement_conditions', function (err, measureData) {
+    setText(container, '');
+    if (err) {
+      showCustomAlert('Error loading measurement conditions: ' + err.message);
+      setText(container, 'Could not load data.');
+    } else {
+      var prepLabel = document.createElement('span');
+      prepLabel.style.verticalAlign = 'top';
+      setText(prepLabel, 'Приготування розчинів: ');
+      var prepArea = document.createElement('textarea');
+      prepArea.style.width = '80%';
+      prepArea.style.height = '100px';
+      prepArea.value = measureData[0].PREPARATION;
+
+      var measureLabel = document.createElement('span');
+      measureLabel.style.verticalAlign = 'top';
+      setText(measureLabel, 'Виконання вимірювань: ');
+      var measureArea = document.createElement('textarea');
+      measureArea.style.width = '80%';
+      measureArea.style.height = '100px';
+      measureArea.value = measureData[0].MEASUREMENT;
+
+      getJSON(apiURL + 'method/' + methodId + '/room_conditions', function (err, roomData) {
+        setText(container, '');
+        if (err) {
+          showCustomAlert('Error loading room conditions: ' + err.message);
+          setText(container, 'Could not load data.');
+        } else {
+          var roomTableContainer = document.createElement('div');
+          roomTableContainer.style.height = '150px';
+          roomTableContainer.style.overflow = 'auto';
+          roomTableContainer.style.marginTop = '8px';
+          var roomTable = document.createElement('table');
+          var tableHead = document.createElement('thead');
+          var headerRow = document.createElement('tr');
+          var headerTitles = ['#', 'Показник', 'Значення'];
+
+          for (var i = 0; i < headerTitles.length; i++) {
+            var th = document.createElement('th');
+            setText(th, headerTitles[i]);
+            headerRow.appendChild(th);
+          }
+          tableHead.appendChild(headerRow);
+          roomTable.appendChild(tableHead);
+
+          var tableBody = document.createElement('tbody');
+
+          for (var i = 0; i < roomData.length; i++) {
+            var row = document.createElement('tr');
+            var idCell = document.createElement('td');
+            var nameCell = document.createElement('td');
+            var codeCell = document.createElement('td');
+
+            setText(idCell, i + 1);
+            setText(nameCell, roomData[i].CNDT_INDEX);
+            setText(codeCell, roomData[i].CNDT_VALUE);
+
+            row.appendChild(idCell);
+            row.appendChild(nameCell);
+            row.appendChild(codeCell);
+
+            tableBody.appendChild(row);
+          }
+
+          roomTable.appendChild(tableBody);
+          roomTableContainer.appendChild(roomTable);
+
+          container.appendChild(prepLabel);
+          container.appendChild(prepArea);
+          container.appendChild(document.createElement('br'));
+          container.appendChild(measureLabel);
+          container.appendChild(measureArea);
+          container.appendChild(document.createElement('br'));
+          container.appendChild(roomTableContainer);
+        }
+      });
     }
   });
   if (displayCallback) displayCallback(container);
