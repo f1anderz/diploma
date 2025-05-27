@@ -156,7 +156,7 @@ exports.getSafetyRequirements = async (req,res) => {
 
 exports.getMeasurementConditions = async (req,res) => {
   await fdb.query(
-    `SELECT * FROM v_measurement_conditions WHERE METHOD_ID = ${req.params.id}`,
+    `SELECT ID, CAST(PREPARATION AS VARCHAR(500) CHARACTER SET WIN1251) AS PREPARATION, CAST(MEASUREMENT AS VARCHAR(500) CHARACTER SET WIN1251) AS MEASUREMENT FROM v_measurement_conditions WHERE METHOD_ID = ${req.params.id}`,
     (err, result) => {
       if (err) {
         return res.status(500).send({ msg: "Internal error", error: err });
@@ -168,7 +168,7 @@ exports.getMeasurementConditions = async (req,res) => {
 
 exports.getRoomConditions = async (req,res) => {
   await fdb.query(
-    `SELECT * FROM v_room_conditions WHERE METHOD_ID = ${req.params.id}`,
+    `SELECT ID, CAST(CNDT_INDEX AS VARCHAR(500) CHARACTER SET WIN1251) AS CNDT_INDEX, CAST(CNDT_VALUE AS VARCHAR(500) CHARACTER SET WIN1251) AS CNDT_VALUE FROM v_room_conditions WHERE METHOD_ID = ${req.params.id}`,
     (err, result) => {
       if (err) {
         return res.status(500).send({ msg: "Internal error", error: err });
