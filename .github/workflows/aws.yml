@@ -21,7 +21,7 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            cd /home/ec-2user/api
+            cd /home/ec2-user/api
             git pull origin master
             shopt -s dotglob
             mv ./api/* .
@@ -30,7 +30,8 @@ jobs:
             sudo mkdir /usr/share/nginx/html/
             sudo cp -r ./client/* /usr/share/nginx/html/
             rm -rf ./client
+            rm -rf ./api
             npm install
-            pm2 restart "npm run start"
+            pm2 restart api
             sudo systemctl restart nginx
           EOF
