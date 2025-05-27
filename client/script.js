@@ -28,6 +28,7 @@ function formatDateObject(dateObj) {
   if (!(dateObj instanceof Date) || isNaN(dateObj.getTime())) {
     return '';
   }
+
   var day = dateObj.getDate();
   var month = dateObj.getMonth() + 1;
   var year = dateObj.getFullYear();
