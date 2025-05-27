@@ -35,7 +35,7 @@ exports.getSubstancePreparates = async (req, res) => {
 
 exports.getSubstanceSynonyms = async (req, res) => {
   await fdb.query(
-    `SELECT ID, CAST(U_NAME AS VARCHAR(500) CHARACTER SET WIN1251) AS U_NAME, E_NAME, FROM v_substance_synonyms WHERE SUBST_ID = ${req.params.id}`,
+    `SELECT ID, CAST(U_NAME AS VARCHAR(500) CHARACTER SET WIN1251) AS U_NAME, E_NAME FROM v_substance_synonyms WHERE SUBST_ID = ${req.params.id}`,
     (err, result) => {
       if (err) {
         return res.status(500).send({ msg: "Internal error", error: err });
