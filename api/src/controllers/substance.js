@@ -59,7 +59,7 @@ exports.getSubstanceSolubility = async (req, res) => {
 
 exports.getSubstanceVaporPressure = async (req, res) => {
   await fdb.query(
-    `SELECT * FROM v_vapor_pressure WHERE SUBSTANCE_ID = ${req.params.id}`,
+    `SELECT * FROM v_vapor_pressure, WHERE SUBSTANCE_ID = ${req.params.id}`,
     (err, result) => {
       if (err) {
         return res.status(500).send({ msg: "Internal error", error: err });
