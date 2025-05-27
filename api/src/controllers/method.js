@@ -85,7 +85,7 @@ exports.getErrorLimits = async (req,res) => {
 
 exports.getSupportEquipping = async (req,res) => {
   await fdb.query(
-    `SELECT * FROM v_support_equipping WHERE METHOD_ID = ${req.params.id}`,
+    `SELECT ID, CAST(NAMING AS VARCHAR(500) CHARACTER SET WIN1251) AS NAMING, CAST(ACCORDING_TO AS VARCHAR(500) CHARACTER SET WIN1251) AS ACCORDING_TO FROM v_support_equipping WHERE METHOD_ID = ${req.params.id}`,
     (err, result) => {
       if (err) {
         return res.status(500).send({ msg: "Internal error", error: err });
@@ -97,7 +97,7 @@ exports.getSupportEquipping = async (req,res) => {
 
 exports.getChemicalGlassware = async (req,res) => {
   await fdb.query(
-    `SELECT * FROM v_chemical_glassware WHERE METHOD_ID = ${req.params.id}`,
+    `SELECT ID, CAST(NAMING AS VARCHAR(500) CHARACTER SET WIN1251) AS NAMING, CAST(ACCORDING_TO AS VARCHAR(500) CHARACTER SET WIN1251) AS ACCORDING_TO FROM v_chemical_glassware WHERE METHOD_ID = ${req.params.id}`,
     (err, result) => {
       if (err) {
         return res.status(500).send({ msg: "Internal error", error: err });
@@ -109,7 +109,7 @@ exports.getChemicalGlassware = async (req,res) => {
 
 exports.getChemicalAgents = async (req,res) => {
   await fdb.query(
-    `SELECT * FROM v_chemical_agents WHERE METHOD_ID = ${req.params.id}`,
+    `SELECT ID, CAST(NAMING AS VARCHAR(500) CHARACTER SET WIN1251) AS NAMING, CAST(ACCORDING_TO AS VARCHAR(500) CHARACTER SET WIN1251) AS ACCORDING_TO FROM  v_chemical_agents WHERE METHOD_ID = ${req.params.id}`,
     (err, result) => {
       if (err) {
         return res.status(500).send({ msg: "Internal error", error: err });
