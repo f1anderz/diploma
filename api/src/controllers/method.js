@@ -144,7 +144,7 @@ exports.getStrangeSubstances = async (req,res) => {
 
 exports.getSafetyRequirements = async (req,res) => {
   await fdb.query(
-    `SELECT ID, CAST(REQUIREMENT AS VARCHAR(500) CHARACTER SET WIN1251) AS REQUIREMENT FROM v_safety_requirements WHERE METHOD_ID = ${req.params.id}`,
+    `SELECT * FROM v_safety_requirements WHERE METHOD_ID = ${req.params.id}`,
     (err, result) => {
       if (err) {
         return res.status(500).send({ msg: "Internal error", error: err });
