@@ -35,6 +35,4 @@ router.get('/:id/room_conditions', methodController.getRoomConditions);
 
 router.get("/", methodController.getMethods);
 
-router.get("/:id", methodController.getMethod);
-
 module.exports = router;

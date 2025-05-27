@@ -10,19 +10,6 @@ exports.getMethods = async (req, res) => {
   });
 };
 
-exports.getMethod = async (req, res) => {
-  await fdb.query(
-    `SELECT * FROM v_methods WHERE id = ${req.params.id}`,
-    (err, result) => {
-      if (err) {
-        res.status(500).send("Query failed");
-      } else {
-        res.json(result);
-      }
-    },
-  );
-};
-
 exports.getMethodHygienicStandards = async (req, res) => {
   await fdb.query(
     `SELECT * FROM v_hygienic_standards WHERE METHOD_ID = ${req.params.id}`,
