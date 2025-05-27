@@ -24,12 +24,12 @@ jobs:
             cd /home/ec-2user/api
             git pull origin master
             shopt -s dotglob
-            mv api/* .
+            mv ./src/* .
             shopt -u dotglob
-            rmdir api
+            rmdir ./src
             sudo rm -rf /usr/share/nginx/html
-            sudo cp -r /client/* /usr/share/nginx/html/
-            rmdir client
+            sudo cp -r ./client/* /usr/share/nginx/html/
+            rmdir ./client
             npm install
             pm2 restart api
             sudo systemctl restart nginx
