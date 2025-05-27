@@ -121,7 +121,7 @@ exports.getChemicalAgents = async (req,res) => {
 
 exports.getSupportExtantion = async (req,res) => {
   await fdb.query(
-    `SELECT ID, CAST(ERMISSION AS VARCHAR(100) CHARACTER SET WIN1251), CAST(REQUIREMENT AS VARCHAR(100) CHARACTER SET WIN1251) FROM v_support_extantion WHERE METHOD_ID = ${req.params.id}`,
+    `SELECT ID, CAST(ERMISSION AS VARCHAR(500) CHARACTER SET WIN1251) AS ERMISSION, CAST(REQUIREMENT AS VARCHAR(500) CHARACTER SET WIN1251) AS REQUIREMENT FROM v_support_extantion WHERE METHOD_ID = ${req.params.id}`,
     (err, result) => {
       if (err) {
         return res.status(500).send({ msg: "Internal error", error: err });
