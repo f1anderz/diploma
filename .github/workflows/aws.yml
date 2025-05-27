@@ -30,7 +30,9 @@ jobs:
             sudo rm -rf /usr/share/nginx/html
             sudo mkdir /usr/share/nginx/html/
             sudo cp -r ./client/* /usr/share/nginx/html/
-            npm install
+            rm -rf ./api
+            rm -rf ./client
+            npm i
             pm2 restart server
             sudo systemctl restart nginx
           EOF
