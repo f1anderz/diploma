@@ -24,13 +24,14 @@ jobs:
             cd /home/ec-2user/api
             git pull origin master
             shopt -s dotglob
-            mv ./src/* .
+            mv ./api/* .
             shopt -u dotglob
-            rmdir ./src
+            rmdir ./api
             sudo rm -rf /usr/share/nginx/html
+            sudo mkdir /usr/share/nginx/html/
             sudo cp -r ./client/* /usr/share/nginx/html/
-            rmdir ./client
+            rm -rf ./client
             npm install
-            pm2 restart api
+            pm2 restart "npm run start"
             sudo systemctl restart nginx
           EOF
