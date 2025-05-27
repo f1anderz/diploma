@@ -1,3 +1,9 @@
-config/dbOptions.js
-node_modules
 .idea
+
+api/node_modules
+api/package-lock.json
+
+api/config/dbOptions.js
+
+client/node_modules
+client/package-lock.json

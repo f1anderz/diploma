@@ -7,9 +7,9 @@ const app = express();
 
 const fdb = require("./config/dbConnection");
 
-const methodRoutes = require("./api/routes/method");
-const substanceRoutes = require("./api/routes/substance");
-const othersRoutes = require("./api/routes/others")
+const methodRoutes = require("./src/routes/method");
+const substanceRoutes = require("./src/routes/substance");
+const othersRoutes = require("./src/routes/others")
 
 app.use(cors());
 app.use(morgan("dev"));
