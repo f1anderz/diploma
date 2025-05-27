@@ -120,7 +120,7 @@ exports.getSupportExtantion = async (req,res) => {
 
 exports.getMethodPrinciple = async (req,res) => {
   await fdb.query(
-    `SELECT * FROM v_method_principle WHERE METHOD_ID = ${req.params.id}`,
+    `SELECT ID, CAST(PRINCIPLE AS VARCHAR(500) CHARACTER SET WIN1251) AS PRINCIPLE, CAST(UNIT AS VARCHAR(500) CHARACTER SET WIN1251) AS UNIT, CAST(SELECTIVITY AS VARCHAR(500) CHARACTER SET WIN1251) AS SELECTIVITY FROM v_method_principle WHERE METHOD_ID = ${req.params.id}`,
     (err, result) => {
       if (err) {
         return res.status(500).send({ msg: "Internal error", error: err });
@@ -132,7 +132,7 @@ exports.getMethodPrinciple = async (req,res) => {
 
 exports.getStrangeSubstances = async (req,res) => {
   await fdb.query(
-    `SELECT * FROM v_strange_substances WHERE METHOD_ID = ${req.params.id}`,
+    `SELECT ID, CAST(SUBSTANCE AS VARCHAR(500) CHARACTER SET WIN1251) AS SUBSTANCE, CAST(SOURCE AS VARCHAR(500) CHARACTER SET WIN1251) AS SOURCE FROM v_strange_substances WHERE METHOD_ID = ${req.params.id}`,
     (err, result) => {
       if (err) {
         return res.status(500).send({ msg: "Internal error", error: err });
