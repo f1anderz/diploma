@@ -28,6 +28,6 @@ jobs:
             sudo cp -r ./client/* /usr/share/nginx/html/
             cd api
             npm i
-            pm2 restart server.js
+            pm2 restart server
             sudo systemctl restart nginx
           EOF
