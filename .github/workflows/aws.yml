@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - master  # or your deployment branch
+      - master
 
 jobs:
   deploy:
@@ -22,21 +22,12 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             sudo cd /home/ec2-user
-            echo "cd"
             sudo git pull origin master
-            echo "pull"
             sudo rm -rf /usr/share/nginx/html/
-            echo "rm nginx"
             sudo mkdir /usr/share/nginx/html/
-            echo "create nginx"
             sudo cp -r ./client/* /usr/share/nginx/html/
-            echo "copy"
             sudo cd api
-            echo "cd api"
             npm i
-            echo "npm i"
             pm2 restart server.js
-            echo "restart"
             sudo systemctl restart nginx
-            echo "restart nginx"
           EOF
