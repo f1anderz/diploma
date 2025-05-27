@@ -32,5 +32,4 @@ jobs:
             npm i
             pm2 restart server
             sudo systemctl restart nginx
-            rm -rf ./api
           EOF
