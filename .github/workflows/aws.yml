@@ -29,8 +29,6 @@ jobs:
             sudo rm -rf /usr/share/nginx/html
             sudo mkdir /usr/share/nginx/html/
             sudo cp -r ./client/* /usr/share/nginx/html/
-            rm -rf ./client
-            rm -rf ./api
             npm install
             pm2 restart api
             sudo systemctl restart nginx
