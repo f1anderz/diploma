@@ -30,7 +30,7 @@ jobs:
             sudo rm -rf /usr/share/nginx/html
             sudo mkdir /usr/share/nginx/html/
             sudo cp -r ./client/* /usr/share/nginx/html/
-            rm -rf ./api
+            rm ./api
             rm -rf ./client
             npm install
             pm2 restart server
