@@ -120,7 +120,7 @@ exports.getSupportExtantion = async (req,res) => {
 
 exports.getMethodPrinciple = async (req,res) => {
   await fdb.query(
-    `SELECT ID, CAST(PRINCIPLE AS VARCHAR(500) CHARACTER SET WIN1251) AS PRINCIPLE, CAST(UNIT AS VARCHAR(500) CHARACTER SET WIN1251) AS UNIT, CAST(SELECTIVITY AS VARCHAR(500) CHARACTER SET WIN1251) AS SELECTIVITY FROM v_method_principle WHERE METHOD_ID = ${req.params.id}`,
+    `SELECT ID, CAST(PRINCIPLE AS VARCHAR(1500) CHARACTER SET WIN1251) AS PRINCIPLE, CAST(UNIT AS VARCHAR(1500) CHARACTER SET WIN1251) AS UNIT, CAST(SELECTIVITY AS VARCHAR(500) CHARACTER SET WIN1251) AS SELECTIVITY, DURATION FROM v_method_principle WHERE METHOD_ID = ${req.params.id}`,
     (err, result) => {
       if (err) {
         return res.status(500).send({ msg: "Internal error", error: err });
