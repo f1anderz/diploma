@@ -1,7 +1,5 @@
 const Firebird = require("node-firebird");
 
-const options = require("./dbOptions");
-
 let dbInstance = null;
 
 function getDatabaseInstance(callback) {
@@ -9,7 +7,13 @@ function getDatabaseInstance(callback) {
     callback(null, dbInstance);
     return;
   }
-  Firebird.attach(options, (err, db) => {
+  Firebird.attach({
+    host: 'localhost',
+    port: 3050,
+    database: '/opt/firebird/CMPI_DB.FDB',
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+  }, (err, db) => {
     if (err) {
       callback(err);
       return;
